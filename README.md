@@ -63,7 +63,28 @@ Sunday backup reminders appear when the app is opened on Sunday; they do not sen
 
 ## Toggl one-tap activities
 - Tap **Toggl** in the bottom navigation. Tap an activity icon once to start; tap the active activity again to stop. Tap a different activity to confirm switching.
-- Edit activities to change icon, color, category, labels, pin state and daily target behavior. Only eight activities can be pinned.
+- Edit activities to change icon, color, category, labels, pin state and daily target behavior. Targets are entered as separate hours and minutes (for example, Sleep = 8 hours + 0 minutes), then saved with the explicit Save activity button. A daily target cannot exceed 24 hours. Only eight activities can be pinned.
 - Minimum targets turn green when achieved and red while still below target. Maximum limits remain green while within the limit and turn amber after exceeding it.
 - A timer spanning midnight is saved as separate daily segments so each day receives the correct duration.
 - In Tasks, **Quick task** asks only for a title and date. Expand the optional section to add checklist lines, one per line.
+
+
+## Reliability update (October 2026)
+- Activity editing uses an explicit submit handler with validation and a clear save confirmation. Target durations are entered in hours plus extra minutes to avoid confusing values such as 480 minutes with 480 hours.
+- Startup compares localStorage and IndexedDB timestamps before choosing the newer snapshot, reducing the risk of stale IndexedDB data replacing newer local data.
+- IndexedDB writes are queued in order and a failed write no longer blocks later save attempts.
+- Legacy or malformed record collections are normalized to safe arrays during loading.
+- Service-worker cache version is incremented to `mr-shadow-v7` to encourage clients to fetch the revised app.
+
+
+## Interaction audit update (v8)
+- Fixed saving edits to a running timer's description, project and tags.
+- Modal goal context is cleared between dialogs; editing an existing task retains its goal link.
+- Global search results are now actionable and open the matching record editor.
+- Search tolerates older records with missing tag arrays.
+- Transaction edits validate amount and date.
+- Service-worker cache bumped to `mr-shadow-v8`.
+
+- Hardened import normalization for malformed/missing note tags, session timestamps, and activity presets.
+- Added stricter backup structure checks before restore.
+- Global search results now open the relevant record editor rather than being static text.
