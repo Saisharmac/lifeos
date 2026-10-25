@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1020">
+<meta name="description" content="Private offline-first personal productivity tracker">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>LifeOS — Personal Tracker</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1020;--panel:#121a2d;--panel2:#18223a;--text:#eef2ff;--muted:#a4afc9;--line:#293551;--accent:#8b9cff;--accent2:#5eead4;--danger:#ff8b9a;--good:#74e0ae;--radius:18px}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(1000px 450px at 50% -180px,#25325a 0%,var(--bg) 65%);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
+button,input,textarea,select{font:inherit}button{cursor:pointer;border:1px solid var(--line);border-radius:12px;background:var(--panel2);color:var(--text);padding:10px 13px}button.primary{background:var(--accent);color:#0b1020;border-color:transparent;font-weight:750}button.danger{color:var(--danger)}button:disabled{opacity:.45;cursor:not-allowed}
+input,textarea,select{width:100%;background:#0d1426;border:1px solid var(--line);border-radius:12px;color:var(--text);padding:11px 12px;outline:none}input:focus,textarea:focus,select:focus{border-color:var(--accent)}textarea{min-height:100px;resize:vertical}
+.app{max-width:920px;margin:auto;padding:18px 14px 100px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:4px 0 18px}.brand{display:flex;gap:11px;align-items:center}.logo{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,#8b9cff,#5eead4);color:#0b1020;display:grid;place-items:center;font-weight:900;font-size:20px}.eyebrow{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.12em}.top h1{font-size:23px;margin:0}.date{color:var(--muted);font-size:12px;text-align:right}
+.tabs{display:flex;gap:7px;overflow:auto;padding:4px 0 13px;scrollbar-width:none}.tabs button{white-space:nowrap;flex:0 0 auto;background:transparent}.tabs button.active{background:var(--accent);color:#0b1020;border-color:transparent;font-weight:800}
+.panel{background:color-mix(in srgb,var(--panel) 94%,transparent);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:13px;box-shadow:0 10px 28px #00000014}.panel h2,.panel h3{margin:0 0 12px}.panel h2{font-size:18px}.panel h3{font-size:15px}.muted{color:var(--muted)}.small{font-size:12px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.stat{background:var(--panel2);border-radius:14px;padding:14px}.stat .num{font-size:25px;font-weight:800;letter-spacing:-.04em}.stat .label{font-size:12px;color:var(--muted)}.row{display:flex;align-items:center;gap:9px}.between{display:flex;justify-content:space-between;align-items:center;gap:10px}.stack{display:grid;gap:9px}.formrow{display:grid;grid-template-columns:1fr auto;gap:8px}.inlineform{display:grid;grid-template-columns:1fr 1fr;gap:8px}.item{border:1px solid var(--line);background:#0e1628;border-radius:13px;padding:12px;margin-top:8px}.item p{margin:5px 0}.item .actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.pill{display:inline-block;font-size:11px;padding:3px 8px;border-radius:99px;background:#263252;color:#dce3ff}.checkline{display:flex;align-items:center;gap:10px;min-height:42px}.checkline input{width:20px;height:20px;accent-color:var(--accent)}.checkline span{flex:1}.empty{padding:18px;text-align:center;color:var(--muted)}.timer{font-size:34px;font-weight:850;letter-spacing:-.04em;font-variant-numeric:tabular-nums}.progress{height:8px;background:#27324c;border-radius:99px;overflow:hidden;margin-top:9px}.progress span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0}.barrow{display:grid;grid-template-columns:92px 1fr 55px;gap:8px;align-items:center;margin:10px 0;font-size:12px}.bar{height:10px;background:#27324c;border-radius:99px;overflow:hidden}.bar span{display:block;height:100%;background:var(--accent2)}.bottomnote{font-size:11px;color:var(--muted);text-align:center;margin:22px 0}.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#eef2ff;color:#11182a;padding:11px 16px;border-radius:99px;box-shadow:0 8px 30px #0007;z-index:9;max-width:90vw}
+@media(min-width:700px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}.app{padding-top:28px}.panel{padding:20px}.contentcols{display:grid;grid-template-columns:1.2fr .8fr;gap:13px}.contentcols .panel{height:fit-content}}
+@media(max-width:420px){.app{padding-left:10px;padding-right:10px}.panel{padding:13px}.top h1{font-size:20px}.grid{gap:8px}.stat{padding:11px}.stat .num{font-size:22px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand"><div class="logo">L</div><div><div class="eyebrow">Your private workspace</div><h1>LifeOS</h1></div></div>
+    <div class="date" id="todayLabel"></div>
+  </header>
+  <nav class="tabs" id="tabs">
+    <button class="active" data-tab="home">Overview</button><button data-tab="time">Time</button><button data-tab="habits">Habits</button><button data-tab="tasks">Tasks</button><button data-tab="notes">Notes</button><button data-tab="reports">Reports</button><button data-tab="settings">Settings</button>
+  </nav>
+  <main id="view"></main>
+  <div class="bottomnote">LifeOS stores data on this device. Export a backup regularly.</div>
+</div>
+<div id="toast" class="toast" hidden></div>
+<script>
+(() => {
+'use strict';
+const KEY='lifeos-v1-data';
+const today=()=>new Date().toLocaleDateString('en-CA');
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const defaultData=()=>({habits:[{id:uid(),name:'Exercise',category:'Health',active:true},{id:uid(),name:'Read',category:'Learning',active:true},{id:uid(),name:'Plan the day',category:'Personal',active:true}],habitLog:{},tasks:[],notes:[],sessions:[],reminders:[],running:null,settings:{}}); 
+let data; try{data=JSON.parse(localStorage.getItem(KEY))||defaultData()}catch{data=defaultData()}
+let tab='home', timerInterval=null;
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const save=()=>{localStorage.setItem(KEY,JSON.stringify(data));};
+const mins=n=>{n=Math.max(0,Math.floor(n/60000));return `${Math.floor(n/60)}h ${String(n%60).padStart(2,'0')}m`};
+const duration=s=>Math.max(0,(s.end||Date.now())-s.start);
+const toast=m=>{const t=$('#toast');t.textContent=m;t.hidden=false;setTimeout(()=>t.hidden=true,2400)};
+const daySessions=d=>data.sessions.filter(s=>s.day===d);
+const dayMinutes=d=>daySessions(d).reduce((a,s)=>a+duration(s),0);
+const completedToday=()=>data.habits.filter(h=>(data.habitLog[today()]||[]).includes(h.id)).length;
+const activeHabits=()=>data.habits.filter(h=>h.active!==false);
+const formatDate=d=>new Date(d+'T12:00:00').toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});
+function render(){
+ $('#todayLabel').innerHTML=`${esc(new Date().toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'}))}<br><span class="muted">${esc(new Date().toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'}))}</span>`;
+ $('#tabs').querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+ const v=$('#view');
+ if(tab==='home')v.innerHTML=home(); if(tab==='time')v.innerHTML=timePage(); if(tab==='habits')v.innerHTML=habitsPage(); if(tab==='tasks')v.innerHTML=tasksPage(); if(tab==='notes')v.innerHTML=notesPage(); if(tab==='reports')v.innerHTML=reportsPage(); if(tab==='settings')v.innerHTML=settingsPage();
+}
+function home(){
+ const habits=activeHabits(), done=completedToday(), pending=data.tasks.filter(t=>!t.done);
+ const running=data.running;
+ return `<section class="grid">
+ <div class="stat"><div class="label">TIME TRACKED TODAY</div><div class="num">${mins(dayMinutes(today())+(running?Date.now()-running.start:0))}</div></div>
+ <div class="stat"><div class="label">HABITS COMPLETED</div><div class="num">${done}/${habits.length}</div><div class="progress"><span style="width:${habits.length?done/habits.length*100:0}%"></span></div></div>
+ <div class="stat"><div class="label">OPEN TASKS</div><div class="num">${pending.length}</div></div>
+ <div class="stat"><div class="label">NOTES</div><div class="num">${data.notes.length}</div></div></section>
+ <section class="panel"><div class="between"><h2>Time tracker</h2><button data-action="goto" data-value="time">Open tracker →</button></div>
+ ${running?`<p class="muted">Currently tracking <b>${esc(running.task)}</b></p><div class="timer" id="liveTimer">${mins(Date.now()-running.start)}</div><button class="primary" data-action="stopTimer">Stop timer</button>`:`<p class="muted">What are you working on?</p><form id="quickTimer" class="formrow"><input name="task" placeholder="e.g. UPSC study, coding, exercise" required><button class="primary">Start</button></form>`}</section>
+ <section class="panel"><div class="between"><h2>Today's habits</h2><button data-action="goto" data-value="habits">Manage →</button></div>
+ ${habits.length?habits.map(h=>`<label class="checkline"><input type="checkbox" data-action="habitToggle" data-id="${h.id}" ${(data.habitLog[today()]||[]).includes(h.id)?'checked':''}><span>${esc(h.name)} <span class="muted small">· ${esc(h.category||'General')}</span></span></label>`).join(''):'<div class="empty">Add your first habit.</div>'}</section>
+ <section class="panel"><div class="between"><h2>Next tasks</h2><button data-action="goto" data-value="tasks">View all →</button></div>
+ ${pending.slice(0,4).map(t=>`<label class="checkline"><input type="checkbox" data-action="taskToggle" data-id="${t.id}"><span>${esc(t.title)} ${t.due?`<span class="pill">${esc(t.due)}</span>`:''}</span></label>`).join('')||'<div class="empty">Nothing pending. Nice work.</div>'}
+ </section>`;
+}
+function timePage(){
+ const r=data.running;
+ const sessions=[...data.sessions].sort((a,b)=>b.start-a.start).slice(0,20);
+ const totals={}; data.sessions.filter(s=>s.day===today()).forEach(s=>totals[s.task]=(totals[s.task]||0)+duration(s));
+ return `<section class="panel"><h2>Time tracker</h2>${r?`<div class="muted">Currently tracking</div><h3>${esc(r.task)}</h3><div class="timer" id="liveTimer">${mins(Date.now()-r.start)}</div><div class="row"><button class="primary" data-action="stopTimer">Stop and save</button><button data-action="switchTimer">Switch task</button></div>`:`<form id="quickTimer" class="stack"><label>Task or activity<input name="task" placeholder="e.g. Azure DevOps, UPSC, workout" required></label><label>Category<select name="category"><option>Personal</option><option>Health & Fitness</option><option>UPSC</option><option>Software</option><option>Business</option><option>Finance & Trading</option><option>Job</option><option>AI</option><option>Home & Social</option><option>Miscellaneous</option></select></label><button class="primary">▶ Start tracking</button></form>`}</section>
+ <section class="panel"><h2>Today's time by activity</h2>${Object.keys(totals).length?Object.entries(totals).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="barrow"><span>${esc(k)}</span><div class="bar"><span style="width:${Math.min(100,v/Math.max(...Object.values(totals))*100)}%"></span></div><b>${mins(v)}</b></div>`).join(''):'<div class="empty">Start a timer to build your report.</div>'}</section>
+ <section class="panel"><h2>Recent sessions</h2>${sessions.map(s=>`<div class="item"><div class="between"><b>${esc(s.task)}</b><span class="pill">${mins(duration(s))}</span></div><p class="muted small">${esc(s.day)} · ${new Date(s.start).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}–${s.end?new Date(s.end).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}):'running'}</p><div class="actions"><button data-action="deleteSession" data-id="${s.id}" class="danger">Delete</button></div></div>`).join('')||'<div class="empty">No sessions yet.</div>'}</section>`;
+}
+function habitsPage(){
+ const done=data.habitLog[today()]||[];
+ return `<section class="panel"><h2>Daily habits</h2><p class="muted small">Check a habit once completed. Your history is stored by date.</p>${activeHabits().map(h=>`<div class="item"><label class="checkline"><input type="checkbox" data-action="habitToggle" data-id="${h.id}" ${done.includes(h.id)?'checked':''}><span><b>${esc(h.name)}</b><br><span class="muted small">${esc(h.category||'General')} · ${habitStreak(h.id)} day streak</span></span></label><div class="actions"><button data-action="editHabit" data-id="${h.id}">Rename</button><button data-action="archiveHabit" data-id="${h.id}">Archive</button><button class="danger" data-action="deleteHabit" data-id="${h.id}">Delete</button></div></div>`).join('')||'<div class="empty">No active habits.</div>'}
+ <form id="addHabit" class="stack" style="margin-top:14px"><h3>Add a habit</h3><input name="name" placeholder="e.g. Read 20 pages" required><input name="category" placeholder="Category (e.g. Learning)"><button class="primary">+ Add habit</button></form></section>`;
+}
+function habitStreak(id){let n=0,d=new Date();for(let i=0;i<365;i++){const key=d.toLocaleDateString('en-CA');if((data.habitLog[key]||[]).includes(id))n++;else if(i>0)break;d.setDate(d.getDate()-1)}return n}
+function tasksPage(){
+ return `<section class="panel"><h2>Tasks & to-do list</h2><form id="addTask" class="stack"><input name="title" placeholder="What needs doing?" required><div class="inlineform"><select name="category"><option>Personal</option><option>Health & Fitness</option><option>UPSC</option><option>Software</option><option>Business</option><option>Job</option><option>Finance & Trading</option><option>Miscellaneous</option></select><input name="due" type="date" aria-label="Due date"></div><button class="primary">+ Add task</button></form>
+ <div class="row" style="margin-top:15px"><button data-action="taskFilter" data-value="open">Open</button><button data-action="taskFilter" data-value="all">All</button><button data-action="taskFilter" data-value="done">Completed</button></div><div id="taskList">${taskList('open')}</div></section>`;
+}
+function taskList(filter){let list=[...data.tasks].sort((a,b)=>(a.due||'9999').localeCompare(b.due||'9999'));if(filter==='open')list=list.filter(t=>!t.done);if(filter==='done')list=list.filter(t=>t.done);return list.map(t=>`<div class="item"><label class="checkline"><input type="checkbox" data-action="taskToggle" data-id="${t.id}" ${t.done?'checked':''}><span style="${t.done?'text-decoration:line-through;opacity:.65':''}"><b>${esc(t.title)}</b><br><span class="muted small">${esc(t.category||'Personal')} ${t.due?'· Due '+esc(t.due):''}</span></span></label><div class="actions"><button data-action="editTask" data-id="${t.id}">Edit</button><button class="danger" data-action="deleteTask" data-id="${t.id}">Delete</button></div></div>`).join('')||'<div class="empty">No tasks in this view.</div>'}
+function notesPage(){return `<section class="panel"><h2>Quick notes</h2><form id="addNote" class="stack"><input name="title" placeholder="Title (optional)"><input name="tags" placeholder="Tags, comma separated (e.g. idea, work)"><textarea name="body" placeholder="Write a note, thought, or journal entry…" required></textarea><button class="primary">Save note</button></form><div class="formrow" style="margin-top:14px"><input id="noteSearch" placeholder="Search notes and tags"><button data-action="clearSearch">Clear</button></div><div id="notesList">${notesList('')}</div></section>`}
+function notesList(q){q=q.toLowerCase();let list=[...data.notes].sort((a,b)=>b.created-a.created).filter(n=>(n.title+' '+n.body+' '+n.tags).toLowerCase().includes(q));return list.map(n=>`<div class="item"><div class="between"><b>${esc(n.title||'Untitled note')}</b><span class="muted small">${new Date(n.created).toLocaleDateString()}</span></div>${n.tags?`<p class="small"><span class="pill">${esc(n.tags)}</span></p>`:''}<p style="white-space:pre-wrap">${esc(n.body)}</p><div class="actions"><button data-action="editNote" data-id="${n.id}">Edit</button><button class="danger" data-action="deleteNote" data-id="${n.id}">Delete</button></div></div>`).join('')||'<div class="empty">No matching notes.</div>'}
+function reportsPage(){
+ const days=[];for(let i=6;i>=0;i--){let d=new Date();d.setDate(d.getDate()-i);days.push(d.toLocaleDateString('en-CA'))}
+ const max=Math.max(1,...days.map(dayMinutes));const week=days.reduce((a,d)=>a+dayMinutes(d),0);
+ const taskDone=data.tasks.filter(t=>t.done).length;
+ return `<section class="grid"><div class="stat"><div class="label">LAST 7 DAYS</div><div class="num">${mins(week)}</div><div class="label">tracked time</div></div><div class="stat"><div class="label">HABITS TODAY</div><div class="num">${completedToday()}/${activeHabits().length}</div></div><div class="stat"><div class="label">TASKS COMPLETED</div><div class="num">${taskDone}</div></div><div class="stat"><div class="label">NOTES SAVED</div><div class="num">${data.notes.length}</div></div></section>
+ <section class="panel"><h2>Time tracked — last 7 days</h2>${days.map(d=>`<div class="barrow"><span>${esc(formatDate(d))}</span><div class="bar"><span style="width:${dayMinutes(d)/max*100}%"></span></div><b>${mins(dayMinutes(d))}</b></div>`).join('')}</section>
+ <section class="panel"><h2>Habit completion</h2>${activeHabits().map(h=>{let n=days.filter(d=>(data.habitLog[d]||[]).includes(h.id)).length;return `<div class="barrow"><span>${esc(h.name)}</span><div class="bar"><span style="width:${n/7*100}%"></span></div><b>${n}/7 days</b></div>`}).join('')||'<div class="empty">Add habits to see progress.</div>'}</section>
+ <section class="panel"><h2>Export report</h2><p class="muted small">Download all data as CSV for spreadsheets, or JSON for a full backup.</p><div class="row"><button class="primary" data-action="exportCSV">Export CSV</button><button data-action="exportJSON">Full JSON backup</button></div></section>`;
+}
+function settingsPage(){return `<section class="panel"><h2>Reminders</h2><p class="muted small">Reminders work while this app is open. Browser/Android restrictions mean reliable scheduled notifications while the app is fully closed are not guaranteed in a free offline-only web app.</p><form id="addReminder" class="stack"><input name="title" placeholder="Reminder (e.g. Take a break)" required><div class="inlineform"><input name="time" type="time" required><select name="frequency"><option value="daily">Every day</option><option value="once">Once today</option></select></div><button class="primary">+ Add reminder</button></form><div style="margin-top:12px">${data.reminders.map(r=>`<div class="item"><div class="between"><span><b>${esc(r.title)}</b><br><span class="muted small">${esc(r.time)} · ${r.frequency==='daily'?'Daily':'Once'}</span></span><button class="danger" data-action="deleteReminder" data-id="${r.id}">Delete</button></div></div>`).join('')||'<div class="empty">No reminders configured.</div>'}</div><div class="actions"><button data-action="enableNotifications">Enable notifications</button><button data-action="testNotification">Test notification</button></div></section>
+ <section class="panel"><h2>Data & privacy</h2><p>Your information is saved in this browser on this device. Clearing browser/site data can erase it. Export a JSON backup before clearing data or changing browsers.</p><div class="row" style="flex-wrap:wrap"><button class="primary" data-action="exportJSON">Export backup</button><label><button type="button" data-action="importClick">Import backup</button><input type="file" id="importFile" accept="application/json,.json" hidden></label><button class="danger" data-action="reset">Reset all data</button></div><p class="muted small">No account, analytics, or external server is used by this starter app.</p></section>
+ <section class="panel"><h2>Install on Android</h2><ol class="muted"><li>Host this folder on a free HTTPS static host (for example GitHub Pages).</li><li>Open the site in Chrome on Android.</li><li>Tap ⋮ → <b>Install app</b> or <b>Add to Home screen</b>.</li><li>Open it once while online so the app shell can be cached for offline use.</li></ol></section>`}
+function startTimer(task,category='Personal'){if(data.running){toast('Stop the current timer first.');return}data.running={id:uid(),task:task.trim(),category,start:Date.now(),day:today()};save();render();toast('Timer started')}
+function stopTimer(){if(!data.running)return;const r=data.running;data.sessions.push({...r,end:Date.now()});data.running=null;save();render();toast('Time session saved')}
+function download(name,content,type){const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();URL.revokeObjectURL(url)}
+function exportJSON(){download('lifeos-backup-'+today()+'.json',JSON.stringify(data,null,2),'application/json')}
+function exportCSV(){const rows=[['type','date','title','category','start','end','minutes','details']];data.sessions.forEach(s=>rows.push(['time',s.day,s.task,s.category,new Date(s.start).toISOString(),s.end?new Date(s.end).toISOString():'',Math.round(duration(s)/60000),'']));data.tasks.forEach(t=>rows.push(['task',t.due||'',t.title,t.category,'','',t.done?'1':'0','done=1']));data.notes.forEach(n=>rows.push(['note',new Date(n.created).toISOString(),n.title,'','','','',n.tags+' | '+n.body]));Object.entries(data.habitLog).forEach(([d,ids])=>ids.forEach(id=>{let h=data.habits.find(x=>x.id===id);rows.push(['habit',d,h?.name||id,h?.category||'','','','1','completed'])}));const csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');download('lifeos-export-'+today()+'.csv',csv,'text/csv;charset=utf-8')}
+function handleAction(el){const a=el.dataset.action,id=el.dataset.id;
+ if(a==='goto'){tab=el.dataset.value;render()}
+ if(a==='stopTimer')stopTimer();
+ if(a==='switchTimer'){const task=prompt('New activity name?');if(task?.trim()){stopTimer();startTimer(task,'Personal')}}
+ if(a==='habitToggle'){const arr=data.habitLog[today()]||(data.habitLog[today()]=[]);if(el.checked&&!arr.includes(id))arr.push(id);else if(!el.checked)data.habitLog[today()]=arr.filter(x=>x!==id);save();render()}
+ if(a==='taskToggle'){const t=data.tasks.find(x=>x.id===id);if(t)t.done=el.checked;save();render()}
+ if(a==='archiveHabit'){const h=data.habits.find(x=>x.id===id);if(h)h.active=false;save();render()}
+ if(a==='deleteHabit'&&confirm('Delete this habit and its history?')){data.habits=data.habits.filter(x=>x.id!==id);Object.keys(data.habitLog).forEach(d=>data.habitLog[d]=data.habitLog[d].filter(x=>x!==id));save();render()}
+ if(a==='editHabit'){const h=data.habits.find(x=>x.id===id),v=prompt('Rename habit',h?.name);if(v?.trim()&&h){h.name=v.trim();save();render()}}
+ if(a==='deleteTask'&&confirm('Delete task?')){data.tasks=data.tasks.filter(x=>x.id!==id);save();render()}
+ if(a==='editTask'){const t=data.tasks.find(x=>x.id===id),v=prompt('Edit task',t?.title);if(v?.trim()&&t){t.title=v.trim();save();render()}}
+ if(a==='taskFilter'){const list=$('#taskList');if(list)list.innerHTML=taskList(el.dataset.value)}
+ if(a==='deleteNote'&&confirm('Delete note?')){data.notes=data.notes.filter(x=>x.id!==id);save();render()}
+ if(a==='editNote'){const n=data.notes.find(x=>x.id===id);if(n){const title=prompt('Title',n.title),body=prompt('Note text',n.body),tags=prompt('Tags',n.tags);if(body!==null){n.title=title??n.title;n.body=body;n.tags=tags??n.tags;save();render()}}}
+ if(a==='deleteSession'&&confirm('Delete this time session?')){data.sessions=data.sessions.filter(x=>x.id!==id);save();render()}
+ if(a==='exportCSV')exportCSV();if(a==='exportJSON')exportJSON();
+ if(a==='clearSearch'){const i=$('#noteSearch');if(i)i.value='';const l=$('#notesList');if(l)l.innerHTML=notesList('')}
+ if(a==='deleteReminder'){data.reminders=data.reminders.filter(x=>x.id!==id);save();render()}
+ if(a==='enableNotifications'){if(!('Notification'in window)){toast('Notifications are not supported in this browser.')}else Notification.requestPermission().then(p=>toast(p==='granted'?'Notifications enabled':'Permission not granted'))}
+ if(a==='testNotification'){if('Notification'in window&&Notification.permission==='granted')new Notification('LifeOS',{body:'Notifications are working while the app is open.'});else toast('Enable notifications first.')}
+ if(a==='importClick')$('#importFile')?.click();
+ if(a==='reset'&&confirm('This permanently clears all LifeOS data in this browser. Export a backup first.')){data=defaultData();save();render();toast('Data reset')}
+}
+document.addEventListener('click',e=>{const el=e.target.closest('[data-action]');if(el&&el.tagName!=='INPUT')handleAction(el)});
+document.addEventListener('change',e=>{const el=e.target;if(el.dataset.action==='habitToggle'||el.dataset.action==='taskToggle')handleAction(el)});
+$('#tabs').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(b){tab=b.dataset.tab;render()}});
+document.addEventListener('submit',e=>{e.preventDefault();const f=e.target,fd=new FormData(f);
+ if(f.id==='quickTimer'){startTimer(fd.get('task'),fd.get('category')||'Personal')}
+ if(f.id==='addHabit'){data.habits.push({id:uid(),name:String(fd.get('name')).trim(),category:String(fd.get('category')||'General').trim(),active:true});save();render();toast('Habit added')}
+ if(f.id==='addTask'){data.tasks.push({id:uid(),title:String(fd.get('title')).trim(),category:fd.get('category'),due:fd.get('due'),done:false,created:Date.now()});save();render();toast('Task added')}
+ if(f.id==='addNote'){data.notes.push({id:uid(),title:String(fd.get('title')||'').trim(),tags:String(fd.get('tags')||'').trim(),body:String(fd.get('body')).trim(),created:Date.now()});save();render();toast('Note saved')}
+ if(f.id==='addReminder'){data.reminders.push({id:uid(),title:String(fd.get('title')).trim(),time:fd.get('time'),frequency:fd.get('frequency'),lastFired:''});save();render();toast('Reminder saved')}
+});
+document.addEventListener('input',e=>{if(e.target.id==='noteSearch'){const l=$('#notesList');if(l)l.innerHTML=notesList(e.target.value)}});
+$('#view').addEventListener('change',e=>{if(e.target.id==='importFile'&&e.target.files[0]){const reader=new FileReader();reader.onload=()=>{try{const d=JSON.parse(reader.result);if(!d.habits||!d.sessions||!d.notes)throw Error();if(confirm('Replace current data with this backup?')){data=d;save();render();toast('Backup imported')}}catch{alert('This does not look like a valid LifeOS backup.')}e.target.value=''};reader.readAsText(e.target.files[0])}});
+function checkReminders(){if(!data.reminders?.length)return;const now=new Date(),time=now.toTimeString().slice(0,5),day=today();data.reminders.forEach(r=>{if(r.time===time&&r.lastFired!==day&&(r.frequency==='daily'||r.lastFired==='')){r.lastFired=day;if('Notification'in window&&Notification.permission==='granted')new Notification('LifeOS reminder',{body:r.title});else toast('Reminder: '+r.title);save()}})}
+setInterval(()=>{if(data.running&&$('#liveTimer'))$('#liveTimer').textContent=mins(Date.now()-data.running.start);if(tab==='home'||tab==='time')$('#todayLabel').innerHTML=`${esc(new Date().toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'}))}<br><span class="muted">${esc(new Date().toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'}))}</span>`;checkReminders()},15000);
+if('serviceWorker'in navigator && location.protocol!=='file:'){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}))}
+render();
+})();
+</script>
+</body>
+</html>
