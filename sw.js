@@ -1,4 +1,4 @@
-const CACHE = 'mr-shadow-v10';
+const CACHE = 'mr-shadow-v13';
 const APP_SHELL = ['./', './index.html', './manifest.webmanifest', './icon.svg'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
@@ -13,13 +13,13 @@ self.addEventListener('fetch', event => {
   const isAppDocument = event.request.mode === 'navigate' || url.pathname.endsWith('/index.html') || url.pathname.endsWith('/lifeos/');
   if (isAppDocument) {
     event.respondWith(fetch(event.request).then(response => {
-      if (response && response.ok) caches.open(CACHE).then(cache => cache.put('./index.html', response.clone()));
+      if (response && response.ok) event.waitUntil(caches.open(CACHE).then(cache => cache.put('./index.html', response.clone())));
       return response;
     }).catch(() => caches.match('./index.html').then(cached => cached || caches.match('./'))));
     return;
   }
   event.respondWith(caches.match(event.request).then(cached => cached || fetch(event.request).then(response => {
-    if (response && response.ok) caches.open(CACHE).then(cache => cache.put(event.request, response.clone()));
+    if (response && response.ok) event.waitUntil(caches.open(CACHE).then(cache => cache.put(event.request, response.clone())));
     return response;
   })));
 });

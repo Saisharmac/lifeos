@@ -1,7 +1,7 @@
 {
   "name": "Mr.Shadow \u2014 Personal Command Center",
   "short_name": "Mr.Shadow",
-  "description": "Your luminous, private, offline-first personal productivity command center",
+  "description": "A private, offline-first personal life management command center",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
