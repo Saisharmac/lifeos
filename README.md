@@ -4,7 +4,9 @@ A personal, free-to-host Progressive Web App for Android. No app-store publishin
 
 ## Included features
 - Overview dashboard and quick actions.
-- Toggl-inspired time tracker with a single running timer, projects, tags, task links, manual entries, editing, duplicate and history.
+- Dedicated Toggl tab with eight pinned one-tap activity timers (Sleep, Work, Office, Commute, Study, Idle, Meals, Exercise), editable activities, category/label mapping, and one active timer at a time.
+- Per-activity daily minimum targets (for study/work) and maximum limits (for sleep/idle/commute), with progress colors for achieved, below target, and over limit.
+- Quick tasks need only a title and target date; optional expandable checklist and details keep task capture lightweight. Checklist items can be checked independently.
 - Tasks with dates, priority, categories, projects and filters.
 - Calendar with session and task markers.
 - Habits, schedules, streaks and historical check-ins.
@@ -19,10 +21,10 @@ A personal, free-to-host Progressive Web App for Android. No app-store publishin
 
 ## Free deployment to GitHub Pages
 1. **Protect any data in the old app first.** If you have records you want to keep, open the old site and export a JSON backup before replacing the code. Site data is tied to the exact origin/browser; this package does not migrate data from a different origin automatically.
-2. Download and extract `Mr.Shadow_Level10_Deploy.zip`.
+2. Download and extract `MrShadow_Phone_Only.zip`.
 3. Open your existing repository: `https://github.com/saisharmac/lifeos`.
 4. Select **Add file → Upload files**.
-5. Upload/replace these four files from the extracted `Mr.Shadow_Level10` folder: `index.html`, `manifest.webmanifest`, `sw.js`, and `icon.svg`. Upload `README.md` too if you want the repository guide updated. There is no SQL file to run for this phone-only version.
+5. Upload/replace these four files from the extracted `MrShadow_Phone_Only` folder: `index.html`, `manifest.webmanifest`, `sw.js`, and `icon.svg`. Upload `README.md` too if you want the repository guide updated. There is no SQL file to run for this phone-only version.
 6. Scroll to **Commit changes**. Use a message such as `Deploy Mr.Shadow Pulse phone-only edition` and commit to the branch your Pages site publishes from.
 7. Open the repository's **Actions** tab and wait for the Pages build/deployment to finish successfully.
 8. On the phone, open `https://saisharmac.github.io/lifeos/` in Chrome. Refresh after deployment. The new service-worker cache is versioned and the app document uses network-first loading, reducing stale-page problems.
@@ -57,3 +59,11 @@ This is a client-side PWA, not a native Android APK. Test all important workflow
 - Keeps all data local; JSON backups remain manual and portable.
 
 Sunday backup reminders appear when the app is opened on Sunday; they do not send operating-system notifications while the app is closed.
+
+
+## Toggl one-tap activities
+- Tap **Toggl** in the bottom navigation. Tap an activity icon once to start; tap the active activity again to stop. Tap a different activity to confirm switching.
+- Edit activities to change icon, color, category, labels, pin state and daily target behavior. Only eight activities can be pinned.
+- Minimum targets turn green when achieved and red while still below target. Maximum limits remain green while within the limit and turn amber after exceeding it.
+- A timer spanning midnight is saved as separate daily segments so each day receives the correct duration.
+- In Tasks, **Quick task** asks only for a title and date. Expand the optional section to add checklist lines, one per line.
