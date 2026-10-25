@@ -1,13 +1,18 @@
 {
-  "name": "LifeOS — Personal Tracker",
+  "name": "LifeOS \u2014 Personal Operating System",
   "short_name": "LifeOS",
-  "description": "Private offline-first habits, notes, tasks and time tracker",
+  "description": "Personal time tracking, tasks, habits, goals and notes",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#0b1020",
-  "theme_color": "#0b1020",
+  "background_color": "#090d18",
+  "theme_color": "#090d18",
   "icons": [
-    {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
   ]
 }
