@@ -1,12 +1,12 @@
 {
-  "name": "LifeOS \u2014 Personal Operating System",
-  "short_name": "LifeOS",
-  "description": "Personal time tracking, tasks, habits, goals and notes",
+  "name": "Mr.Shadow \u2014 Personal Command Center",
+  "short_name": "Mr.Shadow",
+  "description": "Your luminous, private, offline-first personal productivity command center",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#090d18",
-  "theme_color": "#090d18",
+  "background_color": "#080916",
+  "theme_color": "#090817",
   "icons": [
     {
       "src": "icon.svg",

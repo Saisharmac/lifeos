@@ -1,47 +1,59 @@
-# LifeOS Level 10 — Personal Operating System
+# Mr.Shadow — Phone-Only Personal Command Center
 
-A single-page progressive web app for personal use, designed around manual time tracking, tasks, habits, goals, notes, calendar and reports.
+A personal, free-to-host Progressive Web App for Android. No app-store publishing, cloud database, subscription, or account is required.
 
-## Included
-- Dashboard with today's tracked time, task count, habit check-ins, daily target, weekly bars, quick task/note actions.
-- Toggl-inspired timer: one running timer, projects, comma-separated tags, task links, edit/discard/stop, manual time entry, duplicate session, session history, per-day and per-project reporting.
-- Tasks: due date, priority, category, project, notes, open/today/overdue/next-7-days/completed filters, checkbox completion, track time from a task.
-- Calendar: monthly view with time-session dots, task deadlines, selectable day and daily summaries.
-- Habits: daily check-in history, streaks, minimum viable habit, frequency/category and seven-day view.
-- Goals: measurable target/current progress, unit, deadline, status, why, linked tasks and linked time sessions.
-- Notes: title, body, tags, search, edit and delete.
-- Reports: 14-day totals, average, project breakdown, CSV export.
-- Projects and tags.
-- Finance: manual accounts/wallets, opening balances, income, expenses, inter-account transfers, category budgets, monthly filtering, account balances and transaction history. Financial data is never imported from banks automatically.
-- JSON backup/restore, CSV export, local settings and optional manual phone/computer snapshot sync.
-- Offline app shell and responsive mobile layout.
-- First-run migration attempts known legacy keys and preserves all old keys.
+## Included features
+- Overview dashboard and quick actions.
+- Toggl-inspired time tracker with a single running timer, projects, tags, task links, manual entries, editing, duplicate and history.
+- Tasks with dates, priority, categories, projects and filters.
+- Calendar with session and task markers.
+- Habits, schedules, streaks and historical check-ins.
+- Goals, measurable progress and linked tasks/time.
+- Searchable notes with tags.
+- Reports and CSV export.
+- Personal finance: accounts, balances, income, expenses, transfers, budgets and transaction history.
+- IndexedDB local database with a best-effort localStorage fallback and migration from earlier Mr.Shadow keys.
+- Validated JSON export/restore, CSV export and a Sunday in-app backup reminder.
+- Vivid Pulse theme: electric teal, violet, warm gold, high-contrast dark surfaces and subtle glow effects. Motion respects the device's reduced-motion preference.
+- Offline app shell and mobile-first layout.
 
-## Deploy in one update
-1. Open the current LifeOS site and export a JSON backup before replacing anything.
-2. Download and extract `LifeOS_Level10_Deploy.zip`.
-3. In the existing GitHub repository, upload and replace **all four** site files: `index.html`, `manifest.webmanifest`, `sw.js`, `icon.svg`. Keep the repository name and Pages configuration the same.
-4. Commit changes. Wait for Pages deployment.
-5. Open `https://saisharmac.github.io/lifeos/` and refresh. The service worker cache name is versioned.
-6. Check existing data and export a fresh backup.
+## Free deployment to GitHub Pages
+1. **Protect any data in the old app first.** If you have records you want to keep, open the old site and export a JSON backup before replacing the code. Site data is tied to the exact origin/browser; this package does not migrate data from a different origin automatically.
+2. Download and extract `Mr.Shadow_Level10_Deploy.zip`.
+3. Open your existing repository: `https://github.com/saisharmac/lifeos`.
+4. Select **Add file → Upload files**.
+5. Upload/replace these four files from the extracted `Mr.Shadow_Level10` folder: `index.html`, `manifest.webmanifest`, `sw.js`, and `icon.svg`. Upload `README.md` too if you want the repository guide updated. There is no SQL file to run for this phone-only version.
+6. Scroll to **Commit changes**. Use a message such as `Deploy Mr.Shadow Pulse phone-only edition` and commit to the branch your Pages site publishes from.
+7. Open the repository's **Actions** tab and wait for the Pages build/deployment to finish successfully.
+8. On the phone, open `https://saisharmac.github.io/lifeos/` in Chrome. Refresh after deployment. The new service-worker cache is versioned and the app document uses network-first loading, reducing stale-page problems.
+9. To install, open Chrome's menu and choose **Add to Home screen** or **Install app**, if offered.
 
-## Migration notes
-The app writes to `lifeos-v3-data`. If that key does not exist, it checks `lifeos-v2-data`, `lifeos-v1-data`, `lifeos-data`, and `lifeos`. It copies recognizable tasks, sessions, habits, habit history, notes, goals, projects, settings, running timer and reminders into the v3 structure; old keys are not deleted. Since your prior starter may have used a different shape, export the old JSON first. Data in localStorage is scoped to the exact origin and browser profile; data on another device must be imported there.
+## First-use verification
+- Open Mr.Shadow, add a sample task, start and stop a sample timer, and create a sample note.
+- Open **Backup & settings → Export JSON backup** and save the downloaded file to Google Drive (or another safe place).
+- Test restore only with a disposable/test dataset first. Import asks before replacing local data.
+- On Sunday, when you open Mr.Shadow, an in-app reminder appears if you have not exported a backup during the current Sunday week. Tap **Export backup**, then save the downloaded JSON file to Drive.
 
-## Phone/computer sync
-The app works locally without an account. To enable optional manual snapshot sync:
-1. Create a Supabase project and check its current free-tier limits.
-2. Run `supabase-setup.sql` in Supabase SQL Editor.
-3. Copy Project URL and the public anon/publishable key (not service_role).
-4. Open LifeOS → Backup & sync on each device; enter the same URL/key.
-5. Create an account and sign in. Email confirmation may be required by project settings.
-6. Export backups on both devices. On the canonical device, click Upload local snapshot; on the other, Download cloud snapshot.
-7. After edits, sync manually. This is full-snapshot sync, not record-level merge or automatic background sync. Upload overwrites the cloud snapshot and download overwrites local data. Avoid simultaneous changes on two devices.
+## How storage and Sunday reminders work
+- IndexedDB is the primary structured local store; a best-effort localStorage copy is maintained for recovery/compatibility.
+- No cloud sync or Google Drive API integration is included. Google Drive is a place to save the exported backup file; upload the file manually.
+- Sunday reminders are in-app reminders shown when Mr.Shadow is opened on Sunday. A web app cannot reliably run a reminder while fully closed without additional notification infrastructure/permissions, so this version does not promise background notifications.
+- Clearing Chrome site data can erase local records. Keep dated backups outside the browser and verify that a backup file exists before clearing site data.
+
+## Privacy and cost
+- No analytics, remote database, Supabase, Firebase, or third-party JavaScript CDN is used by this phone-only version.
+- GitHub Pages hosting and local app use can be free for this personal project, subject to GitHub's terms and usage limits.
+- JSON backup files contain personal data, including any finance entries. Keep your Drive account secure and do not share backup files publicly.
 
 ## Important limitations
-- This is a client-side PWA, not a native Android APK. Use Chrome on Android → menu → Add to Home screen / Install app.
-- App data stays in the current browser's localStorage unless cloud sync is enabled. Clearing browser/site data can erase local records.
-- Service worker caches the app shell, not user data. Export backups regularly.
-- Notifications/reminders while the app is closed are not implemented in this release.
-- The optional Supabase library is loaded from a CDN when online; the rest of local features should continue to work when it is unavailable, but sync requires internet.
-- Review code and test with a backup before depending on it for important records.
+This is a client-side PWA, not a native Android APK. Test all important workflows before relying on it for financial or other critical records. Backups remain your responsibility.
+
+
+## Mr.Shadow usability refinements
+- Signature dark theme with luminous teal, violet and gold accents.
+- Phone-first fixed bottom navigation and floating quick-action button.
+- Quick action sheet for tasks, focus timer, notes, habits, goals, manual time and calendar.
+- Today focus panel and optional daily review with saved reflection.
+- Keeps all data local; JSON backups remain manual and portable.
+
+Sunday backup reminders appear when the app is opened on Sunday; they do not send operating-system notifications while the app is closed.
