@@ -1,19 +1,18 @@
-# Mr.Shadow v19 — Audit Report
+# Mr.Shadow v21 — Aurora X interaction edition
 
-## Changes
-- Added explicit click-to-save fallback for task submit buttons in `quickTaskForm`, `taskQuickAdd`, `taskForm`, and `modalTask`.
-- Preserved dedicated submit routing for Enter-key submissions. Both paths call `saveTaskForm`; the existing WeakSet lock prevents duplicate writes.
-- Added a futuristic visual layer: ambient violet/cyan lighting, subtle grid background, glass panels, tactile gradient buttons, improved focus and active feedback, and responsive task-add controls.
-- Bumped service worker cache to `mr-shadow-v19`.
-- Preserved the existing localStorage key and IndexedDB database/store identifiers.
+## Intent
+A visual and interaction upgrade on the v20 source. Existing data keys and app feature logic were preserved. Added a searchable command palette, keyboard shortcut (Ctrl/Cmd+K), live command filtering, pointer-responsive local card lighting, animated aurora background, richer tactile controls, focus styling and page/modal transitions. Updated PWA theme/icon and service-worker cache to v21.
 
-## Static checks performed
-- JavaScript syntax check: see release verification output.
-- Service worker syntax check.
-- Manifest JSON parse.
-- ZIP integrity.
-- Task handler routing assertions: each supported task form is in the selector and task ID set; click and submit paths call the same save routine.
-- Existing task validation unit test.
+## Checks performed
+- JavaScript syntax check with Node.js.
+- Service worker syntax check with Node.js.
+- Manifest JSON parse and required PWA fields check.
+- CSS style-block presence and balanced brace check.
+- Command palette action and keyboard shortcut presence checks.
+- ZIP integrity test.
 
-## Limitations
-A browser automation runtime was not available in this environment. These are static and unit-level checks, not a claim that the app has been fully exercised in a real browser or on the user's Samsung phone. The user should test quick-add from Today, Tasks, and the modal after deployment.
+## Limits
+This is a source-level audit; no claim of a full device/browser end-to-end test. Pointer spotlight is disabled for touch events and reduced-motion preferences disable ambient animations. No third-party libraries, external requests, or cloud services were added.
+
+## Deploy
+Back up JSON first. Replace index.html, manifest.webmanifest, sw.js and icon.svg in the existing GitHub Pages repository root.
