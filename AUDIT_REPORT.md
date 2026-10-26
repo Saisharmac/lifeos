@@ -1,21 +1,22 @@
-# Mr.Shadow v24 — Save Pipeline Fix
+# Mr.Shadow v25 — Save Button Reliability Patch
 
-## User-reported issue
-Saving edits to manual time entries and creating habits did not work reliably.
+## User-reported failures addressed
+- Creating a new habit or saving edits to a habit.
+- Saving a new or edited life goal.
+- Adding a manual Toggl time entry and saving edits to an existing time entry.
+- Activity preset create/edit save actions.
 
-## Changes
-- Routed habit creation/editing, manual time entry creation, and manual time entry editing through the same dedicated save pipeline on both button click and keyboard form submission.
-- The dedicated pipeline prevents overlapping generic form handlers, disables the submit button while saving, and restores the button afterward.
-- Preserved validation and rollback behavior if persistence fails.
-- Bumped service-worker cache key to `mr-shadow-v24` to reduce stale-script delivery after deployment.
-- Retained the v23 Finance Command Centre features and local-first storage approach.
+## Change
+The previous build relied on normal browser form-submit behavior for some non-dedicated forms. This patch adds a direct click-to-handler path for every registered form's Save button, while retaining the submit-event path for keyboard submission. Dedicated habit/Toggl forms keep their dedicated handlers. The click handler validates required fields, prevents duplicate submission while saving, and shows a useful error if the handler rejects. The service-worker cache is bumped to `mr-shadow-v25`.
+
+## Data safety
+The app remains local-first. Export a JSON backup before replacing files. No data is uploaded by this patch. If local browser storage itself is blocked or full, a save can still fail; the app should show an error rather than pretending it succeeded.
 
 ## Validation
-- v22 regression checks passed.
-- v23 finance static checks passed with the v24 cache key.
-- v24 save-pipeline regression checks passed.
-- Inline JavaScript and service worker passed `node --check`; manifest passed JSON validation.
-- ZIP integrity checked after packaging.
+- `node --check` on extracted inline JavaScript and `sw.js`.
+- Existing v22 regression checks.
+- Existing v23 finance static checks.
+- v24 save regression checks, expanded to assert direct click dispatch for registered forms.
+- ZIP integrity check.
 
-## Limitations
-These are static/code-level regression checks. No live browser automation or physical Samsung-device test was available, so this is not a claim of end-to-end device verification.
+These are static/regression checks. No physical Samsung-device end-to-end test was available, so do not interpret them as a guarantee of live-device behavior.

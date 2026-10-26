@@ -646,7 +646,24 @@ async function runDedicatedFormSave(form){
  try{await handler(form)}catch(err){console.error('Dedicated form save failed',form.id,err);toast('Save failed. Keep the form open and check storage, then retry.')}finally{dedicatedFormLocks.delete(form);if(button?.isConnected){button.disabled=false;button.textContent=oldText||'Save'}}
 }
 document.addEventListener('submit',event=>{const form=event.target;if(!(form instanceof HTMLFormElement)||!DEDICATED_FORM_HANDLERS[form.id])return;event.preventDefault();event.stopImmediatePropagation();runDedicatedFormSave(form)},true);
-document.addEventListener('click',event=>{const button=event.target.closest('button[type="submit"],button:not([type])');if(!button)return;const form=button.closest('form');if(!form||!DEDICATED_FORM_HANDLERS[form.id])return;event.preventDefault();event.stopImmediatePropagation();runDedicatedFormSave(form)},true);
+document.addEventListener('click',event=>{
+ const button=event.target.closest('button[type="submit"],button:not([type])');if(!button||button.disabled)return;
+ const form=button.closest('form');if(!form)return;
+ // Every save button invokes its registered handler directly. This is intentionally not
+ // limited to the dedicated forms: mobile browsers/PWAs can miss implicit form submission.
+ if(DEDICATED_FORM_HANDLERS[form.id])return; // handled by the dedicated listener above
+ if(!FORM_HANDLERS[form.id]&&!TASK_FORM_IDS.has(form.id))return;
+ event.preventDefault();event.stopImmediatePropagation();
+ if(typeof form.reportValidity==='function'&&!form.reportValidity())return;
+ if(TASK_FORM_IDS.has(form.id)){
+   saveTaskForm(form).catch(error=>{console.error('Task button save failed:',form.id,error);toast('Task could not be saved. Keep the form open and check storage.');});
+   return;
+ }
+ const handler=FORM_HANDLERS[form.id];if(!handler)return;
+ if(formSubmitLocks.has(form))return;
+ formSubmitLocks.add(form);const oldText=button.textContent;button.disabled=true;button.textContent='Saving…';
+ Promise.resolve().then(()=>handler(form)).catch(error=>{console.error('Direct save-button handler failed:',form.id,error);toast('Save failed. Keep the form open and check storage, then retry.');}).finally(()=>{formSubmitLocks.delete(form);if(button.isConnected){button.disabled=false;button.textContent=oldText||'Save'}});
+},true);
 // Non-task forms use the explicit per-form registry below.
 document.addEventListener('submit',async event=>{
  const form=event.target;
