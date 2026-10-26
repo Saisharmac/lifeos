@@ -1,18 +1,13 @@
 {
-  "name": "Mr.Shadow \u2014 Personal Command Center",
-  "short_name": "Mr.Shadow",
-  "description": "A private, offline-first personal life management command center",
+  "name": "LifeOS — Personal Tracker",
+  "short_name": "LifeOS",
+  "description": "Private offline-first habits, notes, tasks and time tracker",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#050812",
-  "theme_color": "#080b18",
+  "background_color": "#0b1020",
+  "theme_color": "#0b1020",
   "icons": [
-    {
-      "src": "icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    }
+    {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
   ]
 }
