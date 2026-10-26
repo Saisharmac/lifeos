@@ -1,20 +1,19 @@
-# Mr.Shadow v13 — Phone-only PWA
+# Mr.Shadow v18 — Dedicated Task Save Pipeline
 
-Personal, local-first life-management app designed for mobile use and hosted on GitHub Pages.
+Phone-first, local-first PWA intended for personal use through GitHub Pages.
 
-## v13 changes
-- Reworked the Toggl activity editor to bind a dedicated submit handler directly to the activity form.
-- Unified the create/edit/target-update path, with persistence awaited before the modal closes.
-- Added save-in-progress protection, duplicate-name prevention, and clearer persistence fallback handling.
-- Preserved the existing localStorage key and IndexedDB database/store/key.
-- Bumped the service-worker cache to `mr-shadow-v13`.
+## Files
+- `index.html` — application
+- `manifest.webmanifest` — PWA manifest
+- `sw.js` — offline cache and update handling
+- `icon.svg` — app icon
+- `AUDIT_REPORT.md` — findings, fixes, test results and limitations
+- `tests/task-validation.test.js` — deterministic task-validation property tests
 
-## Deploy safely
-1. Export a JSON backup from your current app first.
-2. Extract the ZIP.
-3. Replace `index.html`, `manifest.webmanifest`, `sw.js`, and `icon.svg` in the root of your existing GitHub repository.
-4. Commit the changes and wait for GitHub Pages to publish.
-5. Fully close/reopen the installed PWA or reload the site to activate the v13 cache.
-6. Test creating an activity, editing an existing target, reloading, and exporting a backup.
+## Local validation
+Run `node tests/task-validation.test.js` to exercise the exact task title, date and priority validators extracted from the app source.
 
-See `AUDIT_REPORT.md` for the audit scope and testing limitations. Code syntax, manifest, static dispatch checks and activity-save unit tests passed; full real-device end-to-end verification is still required.
+## Deployment
+Export a JSON backup first. Replace `index.html`, `manifest.webmanifest`, `sw.js` and `icon.svg` in the root of the existing GitHub Pages repository. Commit and wait for publication. Do not clear browser storage before backing up.
+
+This release has passed static checks and targeted property tests; it has not been fully end-to-end tested on a physical phone.
