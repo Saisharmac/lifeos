@@ -646,6 +646,8 @@ async function runDedicatedFormSave(form){
  try{await handler(form)}catch(err){console.error('Dedicated form save failed',form.id,err);toast('Save failed. Keep the form open and check storage, then retry.')}finally{dedicatedFormLocks.delete(form);if(button?.isConnected){button.disabled=false;button.textContent=oldText||'Save'}}
 }
 document.addEventListener('submit',event=>{const form=event.target;if(!(form instanceof HTMLFormElement)||!DEDICATED_FORM_HANDLERS[form.id])return;event.preventDefault();event.stopImmediatePropagation();runDedicatedFormSave(form)},true);
+// FIX v26: dedicated forms were explicitly excluded from the generic click path, but had no matching click listener. On mobile, a Save tap could therefore do nothing. Route the tap directly to its dedicated handler.
+document.addEventListener('click',event=>{const button=event.target.closest('button[type="submit"],button:not([type])');if(!button||button.disabled)return;const form=button.closest('form');if(!form||!DEDICATED_FORM_HANDLERS[form.id])return;event.preventDefault();event.stopImmediatePropagation();if(typeof form.reportValidity==='function'&&!form.reportValidity())return;runDedicatedFormSave(form)},true);
 document.addEventListener('click',event=>{
  const button=event.target.closest('button[type="submit"],button:not([type])');if(!button||button.disabled)return;
  const form=button.closest('form');if(!form)return;

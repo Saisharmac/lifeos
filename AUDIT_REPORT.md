@@ -1,22 +1,17 @@
-# Mr.Shadow v25 — Save Button Reliability Patch
+# Mr.Shadow v26 — Save Dispatch Root-Cause Audit
 
-## User-reported failures addressed
-- Creating a new habit or saving edits to a habit.
-- Saving a new or edited life goal.
-- Adding a manual Toggl time entry and saving edits to an existing time entry.
-- Activity preset create/edit save actions.
+## Root cause found in the supplied `index.html`
+The v25 source had a dedicated submit listener for `activityForm`, `modalHabit`, `manualForm`, `editSessionForm`, and Why Lab forms. However, the general click listener explicitly returned for those dedicated form IDs, while no dedicated click listener was present. This contradicts the comments claiming a direct click-to-handler path. On a device where the Save tap does not produce a submit event, those forms could not save.
 
 ## Change
-The previous build relied on normal browser form-submit behavior for some non-dedicated forms. This patch adds a direct click-to-handler path for every registered form's Save button, while retaining the submit-event path for keyboard submission. Dedicated habit/Toggl forms keep their dedicated handlers. The click handler validates required fields, prevents duplicate submission while saving, and shows a useful error if the handler rejects. The service-worker cache is bumped to `mr-shadow-v25`.
+Added a capture-phase click listener for buttons inside dedicated forms. It validates the form and calls `runDedicatedFormSave(form)` directly. Existing submit handling remains for keyboard/implicit submit. Bumped service-worker cache to `mr-shadow-v26`. Life rules (`lifeRuleForm`) and goals remain in the general form registry and already have direct click dispatch there.
 
-## Data safety
-The app remains local-first. Export a JSON backup before replacing files. No data is uploaded by this patch. If local browser storage itself is blocked or full, a save can still fail; the app should show an error rather than pretending it succeeded.
+## Scope
+- Habit create/edit (`modalHabit`)
+- Activity preset create/edit (`activityForm`)
+- Manual time entry (`manualForm`)
+- Existing Toggl time entry edit (`editSessionForm`)
+- Life rule and goal forms use the general direct-click registry.
 
-## Validation
-- `node --check` on extracted inline JavaScript and `sw.js`.
-- Existing v22 regression checks.
-- Existing v23 finance static checks.
-- v24 save regression checks, expanded to assert direct click dispatch for registered forms.
-- ZIP integrity check.
-
-These are static/regression checks. No physical Samsung-device end-to-end test was available, so do not interpret them as a guarantee of live-device behavior.
+## Validation and limitations
+JavaScript syntax and ZIP integrity checks are performed. This is source-level diagnosis based on the uploaded v25 file; no live Samsung device or deployed GitHub Pages end-to-end test was available. If life-rule or goal saves still fail after deployment, the next diagnostic is the exact on-screen toast plus browser console error, because the supplied source routes those through a different handler path.
