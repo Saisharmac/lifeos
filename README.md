@@ -1,19 +1,12 @@
-# Mr.Shadow v18 — Dedicated Task Save Pipeline
+# Mr.Shadow v19 — Futuristic UI + Task Add Reliability
 
-Phone-first, local-first PWA intended for personal use through GitHub Pages.
+Phone-first, local-first PWA for GitHub Pages.
 
-## Files
-- `index.html` — application
-- `manifest.webmanifest` — PWA manifest
-- `sw.js` — offline cache and update handling
-- `icon.svg` — app icon
-- `AUDIT_REPORT.md` — findings, fixes, test results and limitations
-- `tests/task-validation.test.js` — deterministic task-validation property tests
+## Deploy
+Back up your in-app JSON first. Upload `index.html`, `manifest.webmanifest`, `sw.js`, and `icon.svg` to the root of the existing GitHub Pages repository and commit. Keep `index.html` at the repository root.
 
-## Local validation
-Run `node tests/task-validation.test.js` to exercise the exact task title, date and priority validators extracted from the app source.
+## Task add fix
+Task quick-add and modal task submit buttons now have a direct capture-phase click-to-save path, in addition to a dedicated submit handler for keyboard submission. Both call the same `saveTaskForm` routine. The click path prevents implicit form submission from racing the dedicated submit handler.
 
-## Deployment
-Export a JSON backup first. Replace `index.html`, `manifest.webmanifest`, `sw.js` and `icon.svg` in the root of the existing GitHub Pages repository. Commit and wait for publication. Do not clear browser storage before backing up.
-
-This release has passed static checks and targeted property tests; it has not been fully end-to-end tested on a physical phone.
+## Data safety
+Existing localStorage and IndexedDB identifiers are preserved. Export a JSON backup before deployment. Browser storage can still be cleared by the operating system or browser.
