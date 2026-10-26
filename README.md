@@ -1,11 +1,8 @@
-# Mr.Shadow v26 — Save Button Dispatch Fix
+# Mr.Shadow v27
 
-## Install
-1. Export a JSON backup first.
-2. Replace `index.html`, `manifest.webmanifest`, `sw.js`, and `icon.svg` in the existing GitHub Pages repository.
-3. Commit and wait for Pages to publish. Reopen the app.
+1. Export a JSON backup from the current app.
+2. Replace `index.html`, `manifest.webmanifest`, `sw.js`, and `icon.svg` in the root of your existing GitHub Pages repository.
+3. Commit and wait for Pages to deploy.
+4. Close the installed PWA fully and reopen the site. Test creating a habit, creating a life rule, and editing a Toggl session.
 
-## Fix
-The v25 code excluded dedicated forms from the general click-save listener, but only attached a submit listener for those forms. That meant a tap on Save could miss the dedicated handler. v26 adds the missing direct click listener for dedicated forms (habits, activity presets, manual time entries, and edited time entries). Life rules remain routed through their registered form handler.
-
-Static checks are not a substitute for live testing on the user's device. Export a backup before deployment.
+See AUDIT_REPORT.md for scope and verification limitations.

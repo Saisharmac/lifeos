@@ -609,78 +609,51 @@ const FORM_HANDLERS=Object.freeze({
  accountForm:handleAccountSubmit,transactionForm:handleTransactionSubmit,budgetForm:handleBudgetSubmit,financeGoalForm:handleFinanceGoalSubmit,recurringForm:handleRecurringSubmit,recurringPaymentForm:handleRecurringPaymentSubmit,
  dailyReviewForm:handleDailyReviewSubmit,settingsForm:handleSettingsSubmit,globalSearchForm:handleSearchSubmit,lifeRuleForm:handleLifeRuleSubmit,whyQuestionForm:handleWhyQuestionSubmit,whyQuestionModalForm:handleWhyQuestionSubmit
 });
-// Dedicated task form pipeline: task creation/editing never passes through the general form registry.
+// v27: one unified, single-dispatch save pipeline for every form.
+// Save buttons on mobile invoke the registered handler directly; Enter-key submission
+// reaches the same function. A per-form lock prevents double writes from click + submit.
 const TASK_FORM_IDS=new Set(['quickTaskForm','taskQuickAdd','taskForm','modalTask']);
-const taskSubmitDispatchLocks=new WeakSet();
-document.addEventListener('submit',async event=>{
- const form=event.target;
- if(!(form instanceof HTMLFormElement)||!TASK_FORM_IDS.has(form.id))return;
- event.preventDefault();event.stopImmediatePropagation();
- if(taskSubmitDispatchLocks.has(form))return;
- taskSubmitDispatchLocks.add(form);
- try{await saveTaskForm(form)}
- catch(error){console.error('Dedicated task save failed:',form.id,error);toast('Task could not be saved. Keep the form open and check storage.');}
- finally{taskSubmitDispatchLocks.delete(form)}
-},true);
-// Task buttons have an explicit click-to-save path as well as Enter-key form submission.
-// This avoids depending solely on browser implicit-submit behaviour for mobile PWAs.
-const TASK_FORM_SELECTOR='#main form#quickTaskForm, #main form#taskQuickAdd, #main form#taskForm, #modalRoot form#modalTask';
-document.addEventListener('click',event=>{
- const button=event.target.closest('button[type="submit"],button:not([type])');
- if(!button)return;
- const form=button.closest(TASK_FORM_SELECTOR);
- if(!form)return;
- event.preventDefault();event.stopImmediatePropagation();
- if(typeof form.reportValidity==='function'&&!form.reportValidity())return;
- saveTaskForm(form).catch(error=>{console.error('Task button save failed:',form.id,error);toast('Task could not be saved. Keep the form open and check storage.');});
-},true);
-// Critical forms use one dedicated save pipeline on both pointer activation and keyboard submit.
-// This intentionally bypasses the generic registry for habits, Toggl activities, manual time
-// entries and time-entry edits to avoid overlapping submit handlers in mobile PWAs.
-const DEDICATED_FORM_HANDLERS=Object.freeze({activityForm:handleActivitySubmit,modalHabit:handleHabitSubmit,manualForm:handleManualTimeSubmit,editSessionForm:handleSessionEditSubmit,whyQuestionForm:handleWhyQuestionSubmit,whyQuestionModalForm:handleWhyQuestionSubmit});
-const dedicatedFormLocks=new WeakSet();
-async function runDedicatedFormSave(form){
- const handler=DEDICATED_FORM_HANDLERS[form?.id];if(!handler||dedicatedFormLocks.has(form))return;
- dedicatedFormLocks.add(form);const button=form.querySelector('button[type="submit"],button:not([type])'),oldText=button?.textContent;
- if(button){button.disabled=true;button.textContent='Saving…'}
- try{await handler(form)}catch(err){console.error('Dedicated form save failed',form.id,err);toast('Save failed. Keep the form open and check storage, then retry.')}finally{dedicatedFormLocks.delete(form);if(button?.isConnected){button.disabled=false;button.textContent=oldText||'Save'}}
-}
-document.addEventListener('submit',event=>{const form=event.target;if(!(form instanceof HTMLFormElement)||!DEDICATED_FORM_HANDLERS[form.id])return;event.preventDefault();event.stopImmediatePropagation();runDedicatedFormSave(form)},true);
-// FIX v26: dedicated forms were explicitly excluded from the generic click path, but had no matching click listener. On mobile, a Save tap could therefore do nothing. Route the tap directly to its dedicated handler.
-document.addEventListener('click',event=>{const button=event.target.closest('button[type="submit"],button:not([type])');if(!button||button.disabled)return;const form=button.closest('form');if(!form||!DEDICATED_FORM_HANDLERS[form.id])return;event.preventDefault();event.stopImmediatePropagation();if(typeof form.reportValidity==='function'&&!form.reportValidity())return;runDedicatedFormSave(form)},true);
-document.addEventListener('click',event=>{
- const button=event.target.closest('button[type="submit"],button:not([type])');if(!button||button.disabled)return;
- const form=button.closest('form');if(!form)return;
- // Every save button invokes its registered handler directly. This is intentionally not
- // limited to the dedicated forms: mobile browsers/PWAs can miss implicit form submission.
- if(DEDICATED_FORM_HANDLERS[form.id])return; // handled by the dedicated listener above
- if(!FORM_HANDLERS[form.id]&&!TASK_FORM_IDS.has(form.id))return;
- event.preventDefault();event.stopImmediatePropagation();
- if(typeof form.reportValidity==='function'&&!form.reportValidity())return;
- if(TASK_FORM_IDS.has(form.id)){
-   saveTaskForm(form).catch(error=>{console.error('Task button save failed:',form.id,error);toast('Task could not be saved. Keep the form open and check storage.');});
-   return;
- }
- const handler=FORM_HANDLERS[form.id];if(!handler)return;
- if(formSubmitLocks.has(form))return;
- formSubmitLocks.add(form);const oldText=button.textContent;button.disabled=true;button.textContent='Saving…';
- Promise.resolve().then(()=>handler(form)).catch(error=>{console.error('Direct save-button handler failed:',form.id,error);toast('Save failed. Keep the form open and check storage, then retry.');}).finally(()=>{formSubmitLocks.delete(form);if(button.isConnected){button.disabled=false;button.textContent=oldText||'Save'}});
-},true);
-// Non-task forms use the explicit per-form registry below.
-document.addEventListener('submit',async event=>{
- const form=event.target;
+const FORM_SAVE_LOCKS=new WeakSet();
+const ALL_FORM_HANDLERS=Object.freeze({
+ ...FORM_HANDLERS,
+ quickTaskForm:saveTaskForm,taskQuickAdd:saveTaskForm,taskForm:saveTaskForm,modalTask:saveTaskForm
+});
+async function dispatchFormSave(form,source='submit',clickedButton=null){
  if(!(form instanceof HTMLFormElement))return;
- if(DEDICATED_FORM_HANDLERS[form.id])return;
- const handler=FORM_HANDLERS[form.id];
- if(!handler)return;
+ const handler=ALL_FORM_HANDLERS[form.id];
+ if(typeof handler!=='function')return;
+ if(FORM_SAVE_LOCKS.has(form))return;
+ if(typeof form.reportValidity==='function'&&!form.reportValidity())return;
+ FORM_SAVE_LOCKS.add(form);
+ const button=clickedButton||form.querySelector('button[type="submit"],button:not([type])');
+ const oldText=button?.textContent;
+ if(button){button.disabled=true;button.textContent='Saving…';}
+ try{
+   const result=await handler(form);
+   return result;
+ }catch(error){
+   console.error('Mr.Shadow save dispatch failed', {formId:form.id,source,error});
+   toast(`Could not save ${form.id}. The form is still open; check storage and retry.`);
+ }finally{
+   FORM_SAVE_LOCKS.delete(form);
+   if(button?.isConnected){button.disabled=false;button.textContent=oldText||'Save';}
+ }
+}
+// Capture only once: no separate dedicated/general click listeners compete with one another.
+document.addEventListener('click',event=>{
+ const target=event.target instanceof Element?event.target:null;
+ const button=target?.closest('button[type="submit"],button:not([type])');
+ if(!button||button.disabled)return;
+ const form=button.closest('form');
+ if(!form||typeof ALL_FORM_HANDLERS[form.id]!=='function')return;
  event.preventDefault();event.stopImmediatePropagation();
- if(formSubmitLocks.has(form))return;
- formSubmitLocks.add(form);
- const button=form.querySelector('button[type="submit"],button:not([type])');
- const originalText=button?.textContent;
- if(button){button.disabled=true;if(!/Saving|Adding|Starting/.test(button.textContent||''))button.textContent='Saving…';}
- try{await handler(form)}catch(error){console.error('Form action failed:',form.id,error);toast('This action failed. Your existing records were not intentionally cleared. Please retry or export a backup.');}
- finally{formSubmitLocks.delete(form);if(button&&button.isConnected){button.disabled=false;if(originalText!==undefined)button.textContent=originalText;}}
+ void dispatchFormSave(form,'button',button);
+},true);
+document.addEventListener('submit',event=>{
+ const form=event.target;
+ if(!(form instanceof HTMLFormElement)||typeof ALL_FORM_HANDLERS[form.id]!=='function')return;
+ event.preventDefault();event.stopImmediatePropagation();
+ void dispatchFormSave(form,'submit');
 },true);
 document.addEventListener('input',e=>{if(e.target.id==='commandSearch'){const q=e.target.value.trim().toLocaleLowerCase();let visible=0;$$('#commandList .command-option').forEach(b=>{const show=(b.dataset.command+' '+b.innerText).toLocaleLowerCase().includes(q);b.hidden=!show;if(show)visible++});$('#commandEmpty')?.classList.toggle('show',visible===0)}if(e.target.id==='taskSearch'){taskQuery=e.target.value;const el=e.target,st=el.selectionStart;tasksPage($('#main'));const next=$('#taskSearch');next?.focus();if(next&&st!==null)next.setSelectionRange(st,st)}if(e.target.id==='financeSearch'){const q=e.target.value;const pos=e.target.selectionStart;financePage($('#main'));const n=$('#financeSearch');n?.focus();if(n&&pos!==null)n.setSelectionRange(pos,pos)}if(e.target.id==='noteSearch'){noteSearch=e.target.value;let pos=e.target.selectionStart;notesPage($('#main'));let n=$('#noteSearch');n.focus();n.setSelectionRange(pos,pos)}if(e.target.id==='sessionFrom'||e.target.id==='sessionTo'){let from=$('#sessionFrom')?.value,to=$('#sessionTo')?.value;let list=db.sessions.filter(s=>(!from||s.day>=from)&&(!to||s.day<=to)).sort((a,b)=>b.start-a.start);$('#sessionList').innerHTML=sessionRows(list)}});
 document.addEventListener('change',e=>{if(e.target.id==='taskSort'){taskSort=['due','priority','created'].includes(e.target.value)?e.target.value:'due';tasksPage($('#main'))}if(e.target.name==='type'&&e.target.closest('#transactionForm')){let type=e.target.value,cat=$('#txCategory'),wrap=$('#toAccountWrap');if(cat){cat.innerHTML=(FIN_CATS[type]||FIN_CATS.expense).map(c=>`<option>${esc(c)}</option>`).join('');cat.disabled=type==='transfer'}if(wrap)wrap.classList.toggle('hide',type!=='transfer')}if(['financeMonth','financeTypeFilter','financeCategoryFilter'].includes(e.target.id)){financePage($('#main'))}if(e.target.id==='importFile'&&e.target.files[0]){let reader=new FileReader();reader.onload=()=>{try{let x=JSON.parse(reader.result);if(!validateBackup(x))throw Error('This file does not look like a valid LifeOS backup. Required record collections are missing or malformed.');if(confirm('Replace local LifeOS data with this backup? Export current data first.')){db=normalize(x);save();render();toast('Backup restored')}}catch(err){alert('Import failed: '+err.message)}e.target.value=''};reader.readAsText(e.target.files[0])}});
