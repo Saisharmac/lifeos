@@ -1,10 +1,21 @@
-# Mr.Shadow v27 — Unified Save Dispatcher
+# Mr.Shadow v30 — Complete Command Centre Directory
 
-## Why this differs from v26
-The source contained multiple overlapping capture-phase click/submit dispatchers (task-specific, dedicated-form, and generic-form). v27 replaces those competing dispatchers with one click path and one submit path sharing one per-form lock. The same handler registry routes habits, life rules, Toggl activity presets, manual entries, session edits, goals, and other registered forms.
+## User issue
+The Why Lab was missing from the home page's section directory even though it existed inside Backup & Settings.
 
-## Safety
-The app remains local-first. Export a JSON backup before replacing files. This patch does not clear existing browser storage. Save failures should leave the form open and log a console error.
+## Change
+- Added a dedicated **Why Lab** tile to the home Command Centre.
+- Updated the directory count from 12 to 13.
+- The tile uses the existing `openWhySection` action, which navigates to Backup & Settings and scrolls directly to the Why Lab panel, preserving existing question data and form behavior.
+- Kept all existing sections and the local data schema intact.
+- Updated service-worker cache name to `mr-shadow-v30` so clients can refresh cached app assets.
 
 ## Validation
-Static JavaScript syntax check, service-worker syntax check, registry assertions for the affected forms, and ZIP integrity check passed. No physical device/browser end-to-end test was available.
+- Extracted inline JavaScript passed `node --check`.
+- Service worker passed `node --check`.
+- Manifest parsed as valid JSON.
+- Asserted the home directory includes the Why Lab tile and action.
+- ZIP integrity checked.
+
+## Limitation
+Static checks do not substitute for live testing on the user's Samsung phone. No app data is intentionally reset or migrated by this change.

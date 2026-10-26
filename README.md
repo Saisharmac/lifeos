@@ -1,8 +1,3 @@
-# Mr.Shadow v27
+# Mr.Shadow v30
 
-1. Export a JSON backup from the current app.
-2. Replace `index.html`, `manifest.webmanifest`, `sw.js`, and `icon.svg` in the root of your existing GitHub Pages repository.
-3. Commit and wait for Pages to deploy.
-4. Close the installed PWA fully and reopen the site. Test creating a habit, creating a life rule, and editing a Toggl session.
-
-See AUDIT_REPORT.md for scope and verification limitations.
+This package adds Why Lab to the Command Centre directory. In the existing GitHub Pages repository, back up your JSON data first, then replace the four root app files: `index.html`, `manifest.webmanifest`, `sw.js`, and `icon.svg`. Keep the repository name unchanged. Commit and wait for Pages to publish, then fully close and reopen the installed app.

@@ -214,6 +214,32 @@ button:disabled{opacity:.65;cursor:wait;transform:none!important;filter:saturate
 .segmented-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.type-choice{position:relative;cursor:pointer}.type-choice input{position:absolute;opacity:0;pointer-events:none}.type-choice span{display:flex;align-items:center;justify-content:center;min-height:42px;padding:8px 5px;border:1px solid var(--line);border-radius:11px;background:var(--panel2);font-size:.82rem;font-weight:650;transition:background .18s,border-color .18s,transform .18s}.type-choice input:checked+span{border-color:var(--accent);background:rgba(139,124,255,.16);box-shadow:inset 0 0 0 1px rgba(139,124,255,.18)}.type-choice:active span{transform:scale(.98)}
 .finance-trend{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:9px;align-items:end;min-height:160px;padding:14px 4px 4px}.trend-col{min-width:0;display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center}.trend-bars{height:104px;width:100%;display:flex;align-items:end;justify-content:center;gap:4px;border-bottom:1px solid var(--line);padding:0 4px}.trend-bars span{display:block;flex:0 1 16px;width:16px;min-height:0;border-radius:5px 5px 2px 2px;transition:height .25s}.trend-income{background:linear-gradient(180deg,#6cf0d4,#268f9b)}.trend-expense{background:linear-gradient(180deg,#ff9eaf,#bc496c)}.trend-col small{font-size:.75rem}.legend-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}.income-dot{background:#50d9c3}.expense-dot{background:#e76e8c}.smallbtn{padding:7px 10px;min-height:34px;font-size:.78rem}
 @media(max-width:620px){.finance-trend{gap:4px}.trend-bars{gap:3px;height:88px}.trend-bars span{max-width:12px}.finance-kpi{padding:10px}.segmented-row{gap:4px}.type-choice span{font-size:.74rem}}
+
+/* v28: redesigned Growth and Time sections, mobile-first */
+:root{--r:22px;--shadow:0 22px 60px #0009;--line:#273650;--surface:#0c1425;--surface2:#111d32;--surface3:#1a2944;--accent:#b8a7ff;--accent2:#55e8d5}
+.panel,.toggl-hero,.stat,.habitcard,.rule-card,.item{border:1px solid #2b3a56!important;border-radius:22px!important;background:linear-gradient(145deg,#111d32f2,#080f1ff5)!important;box-shadow:0 12px 34px #0002}
+.panel{padding:clamp(16px,3vw,24px)!important;margin:14px 0!important}.panel h3{letter-spacing:-.025em;font-size:clamp(17px,2.3vw,22px)}.item{padding:16px!important;margin:10px 0!important}
+.habitgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:12px}.habitcard{padding:18px!important;min-width:0}.habitcard h3{font-size:18px!important}
+.toggl-hero{padding:clamp(18px,4vw,30px)!important;background:radial-gradient(650px 220px at 90% 0%,#6454b53b,transparent 60%),linear-gradient(145deg,#111d34,#090f1e)!important}
+.toggl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:10px}.activity-tile{min-height:122px!important;border-radius:18px!important;padding:14px 10px!important;background:linear-gradient(145deg,#192741,#0b1324)!important;border-color:#334563!important}.activity-tile.running{outline:2px solid var(--accent2);box-shadow:0 0 0 5px #55e8d51c}.activity-icon{font-size:25px!important}
+.section-switch{padding:5px;border-radius:18px;background:#080f1d;border:1px solid #27334c;gap:6px}.section-switch button{flex:1;min-height:48px;border-radius:14px;font-weight:750}.section-switch button.active{background:linear-gradient(110deg,#b8a7ff,#55e8d5);color:#07111e;border:0}
+.formactions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-top:14px}.formactions button{min-height:52px;border-radius:16px;font-weight:800;white-space:normal}.modal{max-height:min(88dvh,900px);overflow:auto;border-radius:26px!important;border:1px solid #3b4c6d!important;background:linear-gradient(150deg,#111d32,#080e1c)!important;padding:clamp(18px,4vw,28px)!important}.modalback{align-items:flex-end!important;padding:10px!important}.modalhead{position:sticky;top:-1px;z-index:2;background:#111d32f5;padding-bottom:12px}
+input,select,textarea{min-height:48px;border-radius:15px!important;border-color:#2c3b58!important;background:#070e1c!important;font-size:16px!important}button{min-height:44px;border-radius:15px}button.primary{background:linear-gradient(110deg,#b8a7ff,#55e8d5)!important;color:#08121e!important;box-shadow:0 8px 24px #6d6be52a}button:disabled{opacity:.65}.toast{z-index:9999}
+@media(max-width:600px){.shell{padding:10px 10px 108px}.stats{gap:9px}.stat{padding:14px!important}.formgrid,.grid2{grid-template-columns:1fr 1fr;gap:10px}.formgrid .wide{grid-column:1/-1}.modalback{padding:0!important}.modal{width:100%!important;max-height:90dvh!important;border-radius:26px 26px 0 0!important;padding:20px 16px calc(18px + env(safe-area-inset-bottom))!important}.formactions{position:sticky;bottom:-1px;background:linear-gradient(180deg,transparent,#0b1426 20%);padding-top:12px}.activity-tile{min-height:110px!important}.mobile-nav{backdrop-filter:blur(20px)}}
+
+/* v29 command-centre home */
+.command-centre{margin-bottom:13px;background:radial-gradient(600px 240px at 100% 0%,#34245b55,transparent 70%),linear-gradient(145deg,#101827,#0a0b13)}
+.command-centre-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:14px}
+.command-centre-tile{display:flex;align-items:center;gap:10px;min-width:0;min-height:76px;text-align:left;padding:12px;background:linear-gradient(145deg,#151e32,#0c1220);border:1px solid #27334c;border-radius:14px;color:var(--text)}
+.command-centre-tile.current{border-color:#a78bfa88;background:linear-gradient(145deg,#2a2147,#10192a);box-shadow:inset 0 0 0 1px #a78bfa22}
+.command-centre-icon{display:grid;place-items:center;flex:0 0 39px;width:39px;height:39px;border-radius:12px;background:linear-gradient(145deg,#a78bfa26,#22d3ee15);border:1px solid #a78bfa35;color:#d8ccff;font-size:21px}
+.command-centre-copy{display:grid;gap:3px;min-width:0;flex:1}
+.command-centre-copy strong{font-size:12px;line-height:1.25}
+.command-centre-copy small{font-size:10px;color:var(--muted);line-height:1.3}
+.command-centre-arrow{color:#7f8aa8;font-size:13px;align-self:flex-start}
+@media(max-width:850px){.command-centre-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:420px){.command-centre-grid{gap:7px}.command-centre-tile{padding:10px 8px;gap:8px;min-height:72px}.command-centre-icon{width:34px;height:34px;flex-basis:34px;font-size:19px}.command-centre-copy strong{font-size:11px}.command-centre-copy small{font-size:9px}.command-centre-arrow{display:none}}
+
 </style></head>
 <body><div class="shell">
 <header class="topbar"><div class="brand"><div class="logo" aria-label="Mr.Shadow eclipse logo"><svg viewBox="0 0 40 40" width="28" height="28" aria-hidden="true"><defs><linearGradient id="eclipse" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d8ccff"/><stop offset="1" stop-color="#7c3aed"/></linearGradient></defs><circle cx="19" cy="20" r="13" fill="none" stroke="url(#eclipse)" stroke-width="2.5"/><circle cx="23" cy="16" r="11" fill="#0a0911"/><path d="M9 29 Q20 36 30 27" fill="none" stroke="#8b5cf6" stroke-width="1.5" opacity=".85"/></svg></div><div><div class="eyebrow">Your personal command center</div><h1>Mr.Shadow <span class="brand-pulse">/ SHADOW PULSE</span></h1></div></div><div class="topright"><div class="clockbadge" id="clock"></div><button class="ghost" data-action="commandPalette" title="Command center (Ctrl+K)" aria-label="Open command center">⌘ <span class="tiny">Command</span></button><button class="ghost" data-action="globalSearch" title="Search (/)" aria-label="Search records">⌕ <span class="tiny">Search</span></button><button class="ghost" data-action="openSettings" title="Settings" aria-label="Settings">⚙</button></div></header>
@@ -251,8 +277,9 @@ function stat(label,value,foot,ico){return `<div class="stat"><div class="stathe
 function quickForm(){return `<form id="quickStart" class="stack"><input name="description" placeholder="What are you working on?" required><div class="grid2"><select name="projectId">${db.projects.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select><input name="tags" placeholder="Tags: focus, learning"></div><button class="primary">▶ Start timer</button></form>`}
 function taskRows(list,limit=99){return list.slice(0,limit).map(t=>{let checks=t.checklist||[],done=checks.filter(c=>c.done).length;return `<div class="item"><label class="checkrow ${t.done?'done':''}"><input type="checkbox" data-action="toggleTask" data-id="${t.id}" ${t.done?'checked':''}><span class="checktext"><strong>${esc(t.title)}</strong><span class="itemmeta">${t.due?`Due ${esc(fmtDate(t.due))}`:'No due date'} · ${esc(t.category||'General')} ${t.projectId?'· '+esc(projectName(t.projectId)):''}${checks.length?` · ${done}/${checks.length} steps`:''}</span></span>${t.priority==='high'?chip('High','bad'):''}</label>${checks.length?`<div style="padding:4px 0 4px 26px">${checks.map((c,i)=>`<label class="subcheck ${c.done?'done':''}"><input type="checkbox" data-action="toggleChecklistItem" data-id="${t.id}" data-index="${i}" ${c.done?'checked':''}><span>${esc(c.title)}</span></label>`).join('')}</div>`:''}<div class="itemactions"><button data-action="taskTimer" data-id="${t.id}">▶ Track time</button><button data-action="editTask" data-id="${t.id}" class="ghost">Edit</button><button data-action="deleteTask" data-id="${t.id}" class="danger ghost">Delete</button></div></div>`}).join('')||empty('☷','Nothing to show here. Add a task above.')}
 function homePage(v){let r=db.running,done=loggedHabits(today()).length,hab=activeHabits(),open=openTasks(),todayTasks=open.filter(t=>!t.due||t.due<=today()),week=[];for(let i=6;i>=0;i--){let d=new Date();d.setDate(d.getDate()-i);week.push(dateKey(d))}let target=Number(db.settings.dailyTargetMinutes)||240,tracked=dayTotal(today())+(r?Date.now()-r.start:0);
-v.innerHTML=header('Your overview','A clear picture of where your time and attention go.')+
-`<section class="stats">${stat('TIME TODAY',fmtHM(tracked),`${Math.round(tracked/60000/target*100)}% of ${target/60}h daily target`,'◷')}${stat('TASKS OPEN',open.length,`${db.tasks.filter(t=>t.done&&t.completedAt?.startsWith(today())).length} completed today`,'☷')}${stat('HABITS TODAY',`${done}/${hab.length}`,hab.length?`${Math.round(done/hab.length*100)}% checked off`:'Add your first habit','✳')}${stat('WEEKLY TIME',fmtHM(week.reduce((a,d)=>a+dayTotal(d),0)),'Last seven days','▥')}</section>
+v.innerHTML=header('Command centre','Every section of Mr.Shadow, one tap away. Your personal operating system.')+
+`<section class="command-centre panel"><div class="between"><div><div class="eyebrow">WORKSPACE DIRECTORY</div><h3 style="font-size:17px;margin:5px 0 0">All sections</h3><p class="muted tiny" style="margin:4px 0 0">Choose a workspace to open it directly.</p></div><span class="chip">13 sections</span></div><div class="command-centre-grid">${[['home','◈','Overview','Your daily snapshot'],['toggl','◉','Toggl','Start and manage sessions'],['time','◷','Time history','Review every entry'],['tasks','☷','Tasks','Plan and complete work'],['calendar','▦','Calendar','Schedule your days'],['habits','✳','Habits & rules','Routines and check-ins'],['goals','◎','Life goals','Milestones and progress'],['why','❔','Why Lab','Questions, curiosity and learning'],['finance','₹','Finance','Money and budgets'],['notes','▤','Notes','Ideas and reference'],['reports','▥','Reports','Time and productivity'],['projects','▧','Projects & tags','Organise your work'],['settings','⚙','Backup & settings','Data and preferences']].map(([p,i,n,d])=>`<button type="button" class="command-centre-tile ${page===p?'current':''}" ${p==='why'?'data-action="openWhySection"':'data-page="'+p+'"'}><span class="command-centre-icon">${i}</span><span class="command-centre-copy"><strong>${n}</strong><small>${d}</small></span><span class="command-centre-arrow">↗</span></button>`).join('')}</div></section>
+<section class="stats">${stat('TIME TODAY',fmtHM(tracked),`${Math.round(tracked/60000/target*100)}% of ${target/60}h daily target`,'◷')}${stat('TASKS OPEN',open.length,`${db.tasks.filter(t=>t.done&&t.completedAt?.startsWith(today())).length} completed today`,'☷')}${stat('HABITS TODAY',`${done}/${hab.length}`,hab.length?`${Math.round(done/hab.length*100)}% checked off`:'Add your first habit','✳')}${stat('WEEKLY TIME',fmtHM(week.reduce((a,d)=>a+dayTotal(d),0)),'Last seven days','▥')}</section>
 <section class="focus-card"><div class="between"><div><div class="eyebrow" style="color:var(--accent2)">YOUR NEXT MOVE</div><h3>Make today count</h3><div class="muted tiny">Pick one meaningful action. Momentum beats a perfect plan.</div></div></div><div class="row wrap" style="margin-top:11px">${btn('goTasks','Open tasks')} ${btn('goCalendar','Plan my day')} ${btn('dailyReview','Daily review','ghost')}</div><div class="focus-meter"><span style="width:${Math.min(100,open.length?db.tasks.filter(t=>t.done&&t.completedAt?.startsWith(today())).length/Math.max(1,db.tasks.filter(t=>!t.due||t.due<=today()).length)*100:100)}%"></span></div></section>
 <div class="cols"><div class="stack"><section class="timerpanel ${r?'running':''}"><div class="between"><div>${r?'<span class="timerpulse"></span><span class="eyebrow" style="color:var(--accent2)">TIMER RUNNING</span>':'<span class="eyebrow">READY WHEN YOU ARE</span>'}<h3 style="font-size:17px;margin:6px 0 0">${r?esc(r.description):'What are you focusing on?'}</h3></div>${r?chip(projectName(r.projectId),'good'):chip('One-tap tracking')}</div>${r?`<div class="timerface" id="liveTimer">${fmtMs(Date.now()-r.start)}</div><div class="itemmeta">${esc(projectName(r.projectId))} · ${(r.tags||[]).map(t=>chip(t)).join(' ')}</div><div class="formactions" style="margin-top:15px">${btn('stopTimer','■ Stop & save','primary')}${btn('switchTimer','⇄ Switch activity')}${btn('discardTimer','Discard','danger ghost')}</div>`:quickForm()}</section>
 <section class="panel"><div class="between"><h3>Today's tasks</h3>${btn('goTasks','View all →','ghost')}</div>${taskRows(todayTasks,5)}<form id="quickTaskForm" class="row" style="margin-top:10px" autocomplete="off"><input name="title" placeholder="Add a task quickly…" required><button type="submit" class="primary">Add</button></form></section></div>
@@ -609,51 +636,28 @@ const FORM_HANDLERS=Object.freeze({
  accountForm:handleAccountSubmit,transactionForm:handleTransactionSubmit,budgetForm:handleBudgetSubmit,financeGoalForm:handleFinanceGoalSubmit,recurringForm:handleRecurringSubmit,recurringPaymentForm:handleRecurringPaymentSubmit,
  dailyReviewForm:handleDailyReviewSubmit,settingsForm:handleSettingsSubmit,globalSearchForm:handleSearchSubmit,lifeRuleForm:handleLifeRuleSubmit,whyQuestionForm:handleWhyQuestionSubmit,whyQuestionModalForm:handleWhyQuestionSubmit
 });
-// v27: one unified, single-dispatch save pipeline for every form.
-// Save buttons on mobile invoke the registered handler directly; Enter-key submission
-// reaches the same function. A per-form lock prevents double writes from click + submit.
+// v28 rebuilt save engine: exactly one dispatcher for click and keyboard submission.
 const TASK_FORM_IDS=new Set(['quickTaskForm','taskQuickAdd','taskForm','modalTask']);
 const FORM_SAVE_LOCKS=new WeakSet();
-const ALL_FORM_HANDLERS=Object.freeze({
- ...FORM_HANDLERS,
- quickTaskForm:saveTaskForm,taskQuickAdd:saveTaskForm,taskForm:saveTaskForm,modalTask:saveTaskForm
-});
+const ALL_FORM_HANDLERS=Object.freeze({...FORM_HANDLERS,quickTaskForm:saveTaskForm,taskQuickAdd:saveTaskForm,taskForm:saveTaskForm,modalTask:saveTaskForm});
 async function dispatchFormSave(form,source='submit',clickedButton=null){
- if(!(form instanceof HTMLFormElement))return;
- const handler=ALL_FORM_HANDLERS[form.id];
- if(typeof handler!=='function')return;
- if(FORM_SAVE_LOCKS.has(form))return;
+ if(!(form instanceof HTMLFormElement)||FORM_SAVE_LOCKS.has(form))return;
+ const handler=ALL_FORM_HANDLERS[form.id];if(typeof handler!=='function'){console.warn('No handler for form',form.id);toast('This form is not wired to save yet. Your entries remain on screen.');return;}
  if(typeof form.reportValidity==='function'&&!form.reportValidity())return;
- FORM_SAVE_LOCKS.add(form);
- const button=clickedButton||form.querySelector('button[type="submit"],button:not([type])');
- const oldText=button?.textContent;
+ FORM_SAVE_LOCKS.add(form);const button=clickedButton||form.querySelector('button[type="submit"],button:not([type])'),oldText=button?.textContent;
  if(button){button.disabled=true;button.textContent='Saving…';}
- try{
-   const result=await handler(form);
-   return result;
- }catch(error){
-   console.error('Mr.Shadow save dispatch failed', {formId:form.id,source,error});
-   toast(`Could not save ${form.id}. The form is still open; check storage and retry.`);
- }finally{
-   FORM_SAVE_LOCKS.delete(form);
-   if(button?.isConnected){button.disabled=false;button.textContent=oldText||'Save';}
- }
+ try{await handler(form)}catch(error){console.error('Mr.Shadow v28 save failed',{formId:form.id,source,error});toast('Save failed. Your entered values are still here. Retry or export a backup.');}
+ finally{FORM_SAVE_LOCKS.delete(form);if(button?.isConnected){button.disabled=false;button.textContent=oldText||'Save';}}
 }
-// Capture only once: no separate dedicated/general click listeners compete with one another.
 document.addEventListener('click',event=>{
  const target=event.target instanceof Element?event.target:null;
- const button=target?.closest('button[type="submit"],button:not([type])');
- if(!button||button.disabled)return;
- const form=button.closest('form');
- if(!form||typeof ALL_FORM_HANDLERS[form.id]!=='function')return;
- event.preventDefault();event.stopImmediatePropagation();
- void dispatchFormSave(form,'button',button);
+ const button=target?.closest('button[type="submit"],button:not([type])');if(!button||button.disabled)return;
+ const form=button.closest('form');if(!form||typeof ALL_FORM_HANDLERS[form.id]!=='function')return;
+ event.preventDefault();event.stopImmediatePropagation();void dispatchFormSave(form,'button',button);
 },true);
 document.addEventListener('submit',event=>{
- const form=event.target;
- if(!(form instanceof HTMLFormElement)||typeof ALL_FORM_HANDLERS[form.id]!=='function')return;
- event.preventDefault();event.stopImmediatePropagation();
- void dispatchFormSave(form,'submit');
+ const form=event.target;if(!(form instanceof HTMLFormElement)||typeof ALL_FORM_HANDLERS[form.id]!=='function')return;
+ event.preventDefault();event.stopImmediatePropagation();void dispatchFormSave(form,'submit');
 },true);
 document.addEventListener('input',e=>{if(e.target.id==='commandSearch'){const q=e.target.value.trim().toLocaleLowerCase();let visible=0;$$('#commandList .command-option').forEach(b=>{const show=(b.dataset.command+' '+b.innerText).toLocaleLowerCase().includes(q);b.hidden=!show;if(show)visible++});$('#commandEmpty')?.classList.toggle('show',visible===0)}if(e.target.id==='taskSearch'){taskQuery=e.target.value;const el=e.target,st=el.selectionStart;tasksPage($('#main'));const next=$('#taskSearch');next?.focus();if(next&&st!==null)next.setSelectionRange(st,st)}if(e.target.id==='financeSearch'){const q=e.target.value;const pos=e.target.selectionStart;financePage($('#main'));const n=$('#financeSearch');n?.focus();if(n&&pos!==null)n.setSelectionRange(pos,pos)}if(e.target.id==='noteSearch'){noteSearch=e.target.value;let pos=e.target.selectionStart;notesPage($('#main'));let n=$('#noteSearch');n.focus();n.setSelectionRange(pos,pos)}if(e.target.id==='sessionFrom'||e.target.id==='sessionTo'){let from=$('#sessionFrom')?.value,to=$('#sessionTo')?.value;let list=db.sessions.filter(s=>(!from||s.day>=from)&&(!to||s.day<=to)).sort((a,b)=>b.start-a.start);$('#sessionList').innerHTML=sessionRows(list)}});
 document.addEventListener('change',e=>{if(e.target.id==='taskSort'){taskSort=['due','priority','created'].includes(e.target.value)?e.target.value:'due';tasksPage($('#main'))}if(e.target.name==='type'&&e.target.closest('#transactionForm')){let type=e.target.value,cat=$('#txCategory'),wrap=$('#toAccountWrap');if(cat){cat.innerHTML=(FIN_CATS[type]||FIN_CATS.expense).map(c=>`<option>${esc(c)}</option>`).join('');cat.disabled=type==='transfer'}if(wrap)wrap.classList.toggle('hide',type!=='transfer')}if(['financeMonth','financeTypeFilter','financeCategoryFilter'].includes(e.target.id)){financePage($('#main'))}if(e.target.id==='importFile'&&e.target.files[0]){let reader=new FileReader();reader.onload=()=>{try{let x=JSON.parse(reader.result);if(!validateBackup(x))throw Error('This file does not look like a valid LifeOS backup. Required record collections are missing or malformed.');if(confirm('Replace local LifeOS data with this backup? Export current data first.')){db=normalize(x);save();render();toast('Backup restored')}}catch(err){alert('Import failed: '+err.message)}e.target.value=''};reader.readAsText(e.target.files[0])}});
