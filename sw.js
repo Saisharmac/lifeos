@@ -1,4 +1,4 @@
-const CACHE = 'mr-shadow-v23';
+const CACHE = 'mr-shadow-v24';
 const APP_SHELL = ['./', './index.html', './manifest.webmanifest', './icon.svg'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));

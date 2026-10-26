@@ -634,10 +634,10 @@ document.addEventListener('click',event=>{
  if(typeof form.reportValidity==='function'&&!form.reportValidity())return;
  saveTaskForm(form).catch(error=>{console.error('Task button save failed:',form.id,error);toast('Task could not be saved. Keep the form open and check storage.');});
 },true);
-// Critical forms use a dedicated save pipeline on both pointer activation and keyboard submit.
-// This intentionally bypasses the generic registry for habits and Toggl activities to prevent
-// an overlapping handler from swallowing or duplicating a save in the PWA.
-const DEDICATED_FORM_HANDLERS=Object.freeze({activityForm:handleActivitySubmit,modalHabit:handleHabitSubmit,whyQuestionForm:handleWhyQuestionSubmit,whyQuestionModalForm:handleWhyQuestionSubmit});
+// Critical forms use one dedicated save pipeline on both pointer activation and keyboard submit.
+// This intentionally bypasses the generic registry for habits, Toggl activities, manual time
+// entries and time-entry edits to avoid overlapping submit handlers in mobile PWAs.
+const DEDICATED_FORM_HANDLERS=Object.freeze({activityForm:handleActivitySubmit,modalHabit:handleHabitSubmit,manualForm:handleManualTimeSubmit,editSessionForm:handleSessionEditSubmit,whyQuestionForm:handleWhyQuestionSubmit,whyQuestionModalForm:handleWhyQuestionSubmit});
 const dedicatedFormLocks=new WeakSet();
 async function runDedicatedFormSave(form){
  const handler=DEDICATED_FORM_HANDLERS[form?.id];if(!handler||dedicatedFormLocks.has(form))return;
