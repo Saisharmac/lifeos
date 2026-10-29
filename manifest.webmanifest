@@ -1,13 +1,10 @@
 {
-  "name": "LifeOS — Personal Tracker",
-  "short_name": "LifeOS",
-  "description": "Private offline-first habits, notes, tasks and time tracker",
-  "start_url": "./index.html",
-  "scope": "./",
+  "name": "LifeOS2 — Personal Operating System",
+  "short_name": "LifeOS2",
+  "description": "A private, local-first personal operating system.",
+  "start_url": "./",
   "display": "standalone",
-  "background_color": "#0b1020",
-  "theme_color": "#0b1020",
-  "icons": [
-    {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
-  ]
+  "background_color": "#0a0b0f",
+  "theme_color": "#0a0b0f",
+  "icons": []
 }
