@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Activity, ArrowDownLeft, ArrowUpRight, Brain, CalendarDays, Check, CheckCircle2, ChevronRight, CircleHelp, Clock3, Download, FileUp, Filter, Home, ListTodo, Menu, Pause, Play, Plus, Search, Settings, ShieldCheck, Sparkles, Timer, Wallet, X, ChartNoAxesCombined, Trash2 } from 'lucide-react'
+import { Activity, ArrowDownLeft, ArrowUpRight, Brain, CalendarDays, Check, CheckCircle2, ChevronRight, CircleHelp, Clock3, Download, FileUp, Home, ListTodo, Menu, Pause, Play, Plus, Search, Settings, ShieldCheck, Sparkles, Timer, Wallet, X, ChartNoAxesCombined, Trash2 } from 'lucide-react'
 import { emptyData, loadData, saveData } from './db'
 import type { AppData, Section, Task, TimeEntry, Transaction, WhyItem } from './db'
 
