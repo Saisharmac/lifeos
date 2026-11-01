@@ -23,3 +23,12 @@
 - Profit/loss is manually recorded, not automatically derived from trading or business transactions.
 - The cash-flow balance includes all recorded income-side and expense-side cash movements, including hand loans; it is not net worth or accounting profit.
 - Existing data should be exported before deploying any update. Existing local transactions are not migrated to a cloud database.
+
+## Toggl idle-time behavior update (v1.2)
+- Removed any need for an always-running Idle timer. No idle entry is started, stopped, or persisted.
+- Added full-calendar-day coverage: idle includes time before the first activity, between activities, and after the last activity up to now (or midnight for completed days).
+- Sleep is treated like any other recorded activity. Cross-midnight entries are split by local calendar day, and overlapping intervals are merged before gaps are calculated to avoid double-counting.
+- Today is calculated from local midnight through the current moment; completed past days are calculated through the next local midnight. The current day grows dynamically as time passes, without running or storing an Idle timer.
+- Added manual time entry with activity, category, start date/time, and end date/time. It rejects invalid durations and overlaps with existing entries.
+- Time before the first recorded activity is included as idle, because the user selected full 24-hour calendar-day accounting and records sleep as an activity.
+- Build/browser test limitation: dependency installation timed out in this environment, so a full Vite production build and device interaction test could not be completed.

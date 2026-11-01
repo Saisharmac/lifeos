@@ -43,3 +43,7 @@ Data is saved to the current browser profile on the current device. It does not 
 
 ## Notes
 This is a fresh LifeOS2 app, not a migration of existing Mr.Shadow records. The finance update preserves the existing local data shape and adds optional fields to transactions. Test saving, refresh persistence, JSON export/restore and finance calculations on the target Samsung phone before relying on it for important records.
+
+
+### Toggl idle-time calculation
+Idle time is not a continuously running timer. For every calendar day from the earliest recorded activity through today, LifeOS2 treats the unoccupied portions of the day as calculated idle. This includes time from midnight to the first activity, gaps between activities, and the elapsed portion after the final activity. Today is calculated only up to the current moment; completed past days are covered through the next midnight. Activities crossing midnight are split across the relevant days, and overlapping intervals are merged so time is never double-counted. Sleep is an ordinary recorded activity. Idle gaps are derived and are not saved as sessions.
