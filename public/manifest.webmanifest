@@ -1,0 +1,10 @@
+{
+  "name": "LifeOS2 — Personal Operating System",
+  "short_name": "LifeOS2",
+  "description": "A private, local-first personal operating system.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0a0b0f",
+  "theme_color": "#0a0b0f",
+  "icons": []
+}
