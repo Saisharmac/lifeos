@@ -24,11 +24,14 @@ npm install
 npm run dev
 ```
 
-## Build for deployment
-```bash
-npm run build
-```
-Upload the contents of `dist/` to the root of a separate GitHub Pages repository named `lifeos2`, or configure GitHub Pages to publish that directory using an appropriate workflow. Do not overwrite the existing `lifeos` repository while testing this new app.
+## Deploy from a phone using GitHub Actions
+1. Create a separate GitHub repository named `lifeos2` (do not overwrite the existing `lifeos` repository).
+2. Upload the **contents of this project folder** to the repository root. Include the hidden `.github/workflows/deploy.yml` file. Do not upload the ZIP itself, and do not publish the raw source folder as the Pages site.
+3. Open the repository's **Settings → Pages** and set **Build and deployment → Source** to **GitHub Actions**.
+4. Open the **Actions** tab and wait for **Build and deploy LifeOS2 to GitHub Pages** to finish successfully.
+5. Open `https://<your-github-username>.github.io/lifeos2/`.
+
+GitHub Actions installs dependencies, runs the Vite production build, and publishes only the generated `dist/` folder. The project uses a relative Vite base path so it works under the `/lifeos2/` repository path.
 
 ## Data safety
 Data is saved to the current browser profile on the current device. It does not sync to a server. Export JSON backups regularly. Clearing browser site data can erase local records. Restore replaces current app data after confirmation.
